@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>에덴의 타락 — 창세기 3장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c8a96e;
+    --gold-light: #e2c98a;
+    --gold-dim: #8a6f3e;
+    --crimson: #8b1a1a;
+    --crimson-deep: #5c0e0e;
+    --dark: #0d0b08;
+    --dark-2: #13100c;
+    --dark-3: #1a1510;
+    --parchment: #f0e6d0;
+    --parchment-dim: #c9b99a;
+    --text: #d4c4a0;
+    --text-dim: #8a7a60;
+    --serpent-green: #2a4a2a;
+    --serpent-glow: #4a8a4a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--dark);
+    color: var(--text);
+    font-family: 'Noto Serif KR', 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ── 배경 텍스처 ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(139,26,26,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(42,74,42,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 100% 100% at 50% 50%, rgba(200,169,110,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── 노이즈 오버레이 ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ── 헤더 히어로 ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  /* 뱀 그래픽 배경 */
+  .hero-bg-art {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero-bg-art svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.12;
+  }
+
+  .hero-eyeline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .series-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.6s forwards;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 300;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.9s forwards;
+  }
+
+  .hero-verse {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem;
+    border-left: 1px solid var(--crimson);
+    border-right: 1px solid var(--crimson);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.2s forwards;
+  }
+
+  .hero-verse::before,
+  .hero-verse::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--crimson), transparent);
+  }
+  .hero-verse::before { top: 0; }
+  .hero-verse::after { bottom: 0; }
+
+  .hero-verse p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--parchment-dim);
+    line-height: 1.9;
+  }
+
+  .hero-verse cite {
+    display: block;
+    margin-top: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--gold-dim);
+    letter-spacing: 0.2em;
+    text-align: right;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s ease 2s forwards;
+    z-index: 2;
+  }
+
+  .scroll-cue span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .scroll-cue-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── 메인 콘텐츠 ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 2rem 8rem;
+  }
+
+  /* 섹션 구분선 */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 5rem 0 4rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section-divider.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+
+  .section-divider-line:last-child {
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+  }
+
+  .section-divider-diamond {
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--gold-dim);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* ── 텍스트 블록 ── */
+  .text-block {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+    margin-bottom: 2.5rem;
+  }
+
+  .text-block.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .text-block p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+    font-weight: 300;
+    line-height: 2;
+    color: var(--text);
+  }
+
+  /* 강조 텍스트 */
+  .text-block p strong {
+    font-weight: 500;
+    color: var(--gold-light);
+  }
+
+  /* ── 뱀의 유혹 대화 블록 ── */
+  .dialogue-block {
+    margin: 3rem 0;
+    padding: 2.5rem 3rem;
+    background: rgba(42,74,42,0.06);
+    border-left: 2px solid rgba(74,138,74,0.3);
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .dialogue-block.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dialogue-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at left center, rgba(42,74,42,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .dialogue-speaker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--serpent-glow);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .dialogue-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-weight: 400;
+    color: var(--parchment-dim);
+    line-height: 1.8;
+  }
+
+  /* ── 하나님 말씀 블록 ── */
+  .word-block {
+    margin: 3rem 0;
+    padding: 2.5rem 3rem;
+    background: rgba(139,26,26,0.06);
+    border-right: 2px solid rgba(139,26,26,0.4);
+    text-align: right;
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .word-block.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .word-block::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at right center, rgba(139,26,26,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .word-block-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .word-block-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-weight: 400;
+    color: var(--parchment-dim);
+    line-height: 1.8;
+  }
+
+  /* ── 신학적 핵심 강조 박스 ── */
+  .insight-box {
+    margin: 4rem 0;
+    padding: 3rem;
+    border: 1px solid rgba(200,169,110,0.2);
+    background: rgba(200,169,110,0.03);
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .insight-box.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .insight-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .insight-box::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .insight-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .insight-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    line-height: 1.9;
+    text-align: center;
+  }
+
+  /* ── 섹션 헤더 ── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section-header.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 300;
+    color: var(--parchment);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+
+  /* ── 클로징 섹션 ── */
+  .closing {
+    margin-top: 6rem;
+    padding: 5rem 3rem;
+    text-align: center;
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .closing.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .closing::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .closing-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .closing-sub {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  /* ── 구속의 약속 특별 섹션 ── */
+  .promise-section {
+    margin: 5rem 0;
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .promise-section.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .promise-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 200px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.06), transparent 70%);
+    pointer-events: none;
+  }
+
+  .promise-text {
+    position: relative;
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    text-align: center;
+    line-height: 2;
+    padding: 3rem 2rem;
+  }
+
+  .promise-ref {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.3em;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  /* ── 하단 푸터 ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid rgba(200,169,110,0.1);
+  }
+
+  footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── 애니메이션 ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  @keyframes serpentWriggle {
+    0%, 100% { d: path("M 100 400 Q 200 200 300 350 Q 400 500 500 300 Q 600 100 700 300 Q 800 500 900 300"); }
+    50% { d: path("M 100 300 Q 200 500 300 250 Q 400 100 500 400 Q 600 600 700 350 Q 800 200 900 400"); }
+  }
+
+  /* 반응형 */
+  @media (max-width: 640px) {
+    main { padding: 0 1.2rem 6rem; }
+    .dialogue-block, .word-block { padding: 1.8rem 1.5rem; }
+    .insight-box { padding: 2rem 1.5rem; }
+    .closing { padding: 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── 히어로 ── -->
+<header class="hero">
+  <div class="hero-bg-art">
+    <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- 뱀 실루엣 -->
+      <path d="M 50 600 Q 180 350 300 500 Q 420 650 550 400 Q 680 150 800 350 Q 900 500 980 300"
+            stroke="#4a8a4a" stroke-width="3" fill="none" opacity="0.6">
+        <animate attributeName="d"
+          values="M 50 600 Q 180 350 300 500 Q 420 650 550 400 Q 680 150 800 350 Q 900 500 980 300;
+                  M 50 500 Q 180 650 300 350 Q 420 200 550 500 Q 680 700 800 450 Q 900 300 980 500;
+                  M 50 600 Q 180 350 300 500 Q 420 650 550 400 Q 680 150 800 350 Q 900 500 980 300"
+          dur="12s" repeatCount="indefinite"/>
+      </path>
+      <!-- 열매 -->
+      <circle cx="500" cy="120" r="45" fill="rgba(139,26,26,0.4)"/>
+      <circle cx="500" cy="120" r="45" fill="none" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+      <ellipse cx="515" cy="105" rx="10" ry="5" fill="rgba(200,169,110,0.25)" transform="rotate(-30,515,105)"/>
+      <!-- 빛 줄기 -->
+      <line x1="500" y1="0" x2="500" y2="700" stroke="rgba(200,169,110,0.05)" stroke-width="1"/>
+      <line x1="0" y1="350" x2="1000" y2="350" stroke="rgba(200,169,110,0.05)" stroke-width="1"/>
+      <!-- 나뭇잎들 -->
+      <ellipse cx="460" cy="90" rx="20" ry="8" fill="rgba(42,74,42,0.5)" transform="rotate(-40,460,90)"/>
+      <ellipse cx="540" cy="85" rx="18" ry="7" fill="rgba(42,74,42,0.4)" transform="rotate(30,540,85)"/>
+      <!-- 눈 (뱀) -->
+      <circle cx="978" cy="297" r="5" fill="rgba(200,169,110,0.5)"/>
+      <circle cx="980" cy="297" r="2" fill="rgba(0,0,0,0.9)"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="series-label">Genesis · 창세기 3장 · The Fall</p>
+    <h1 class="hero-title">
+      에덴의<br>
+      <span>타락</span>
+    </h1>
+    <p class="hero-subtitle">선택의 순간, 그리고 멈추지 않는 경륜</p>
+
+    <div class="hero-verse">
+      <p>"뱀은 여호와 하나님께서 만드신,<br>들에 사는 다른 어떤 짐승보다<br>더 간교하였다."</p>
+      <cite>— 창세기 3:1</cite>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-cue-line"></div>
+  </div>
+
+  <div class="hero-eyeline"></div>
+</header>
+
+<!-- ── 메인 콘텐츠 ── -->
+<main>
+
+  <!-- 도입 -->
+  <div class="text-block">
+    <p>이 한 구절로 이야기는 조용히, 그러나 깊은 긴장 속에서 시작됩니다. 이미 하나님께서는 사람을 창조하시고, 그를 동산 가운데 두셨으며, 생명나무와 선과 악을 알게 하는 나무를 통해 <strong>생명과 선택의 길</strong>을 마련해 두셨습니다. 그 모든 질서 위에, 이제 다른 한 음성이 스며듭니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>그 음성은 겉으로는 질문의 형태를 띠고 있지만, 실제로는 하나님과 사람 사이에 세워진 <strong>말씀의 신뢰를 흔드는 시작</strong>이었습니다.</p>
+  </div>
+
+  <!-- 섹션 1 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">I · The Question</span>
+    <h2 class="section-title">균열의 시작</h2>
+  </div>
+
+  <div class="dialogue-block">
+    <p class="dialogue-speaker">🐍 뱀이 묻습니다</p>
+    <p class="dialogue-text">"하나님께서 정말로<br>'너희는… 먹어서는 안 된다'라고 하셨습니까?"</p>
+  </div>
+
+  <div class="text-block">
+    <p>이 질문은 단순한 확인이 아니라, 하나님의 말씀을 의심하게 만드는 <strong>균열의 시작</strong>입니다.</p>
+  </div>
+
+  <div class="dialogue-block" style="border-left-color: rgba(200,169,110,0.3); background: rgba(200,169,110,0.04);">
+    <p class="dialogue-speaker" style="color: var(--gold-dim);">👩 여자가 대답합니다</p>
+    <p class="dialogue-text">"먹으면 죽습니다… 만져서도 안 됩니다."</p>
+  </div>
+
+  <div class="text-block">
+    <p>그러나 이 대답 속에는 이미 작은 변화가 담겨 있습니다. 하나님의 말씀에 더해진 한 문장. 이것은 사람이 이제 점점 <strong>하나님의 말씀 자체보다 자신의 이해를 더 의지하기 시작했음을 보여줍니다.</strong></p>
+  </div>
+
+  <!-- 섹션 2 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">II · The Lie</span>
+    <h2 class="section-title">사탄의 방식</h2>
+  </div>
+
+  <div class="dialogue-block">
+    <p class="dialogue-speaker">🐍 뱀이 이어서 말합니다</p>
+    <p class="dialogue-text">"결코 죽지 않을 것입니다… 하나님처럼 될 것입니다."</p>
+  </div>
+
+  <div class="text-block">
+    <p>여기서 드러나는 것은 사탄의 방식입니다. 그는 사람을 무너뜨리기 위해 낮은 것을 제시하지 않습니다.</p>
+  </div>
+
+  <div class="insight-box">
+    <p class="insight-label">Core Insight</p>
+    <p class="insight-text">오히려 더 높아지는 길, 더 지혜로워지는 길,<br>마치 하나님께 가까워지는 것처럼 보이는 길을 제시합니다.<br><br>그러나 그 길은 하나님을 통하여 올라가는 길이 아니라,<br><strong>하나님을 떠나 스스로 도달하려는 길</strong>입니다.</p>
+  </div>
+
+  <!-- 섹션 3 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">III · The Choice</span>
+    <h2 class="section-title">내부의 결정</h2>
+  </div>
+
+  <div class="text-block">
+    <p>"여자가 그 나무의 열매를 보니…"</p>
+    <p style="margin-top: 1.5rem;">이제 이야기는 외부의 유혹에서 사람 내부의 결정으로 넘어갑니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>먹기에 좋고, 보기에 즐겁고, 지혜롭게 할 것 같은 것. 이 세 가지는 단순한 감각이 아니라, 사람이 이제 더 이상 생명에 의해 살지 않고 <strong>자신의 판단을 기준으로 살아가기 시작했음을 보여주는 장면</strong>입니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>결국 여자는 먹고, 남편에게 주며, 그도 먹습니다.</p>
+  </div>
+
+  <!-- 섹션 4 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">IV · The Awakening</span>
+    <h2 class="section-title">눈이 열렸지만</h2>
+  </div>
+
+  <div class="text-block">
+    <p>"두 사람의 눈이 열려…"</p>
+    <p style="margin-top: 1.5rem;">눈이 열렸지만, 그들이 보게 된 것은 하나님이 아니었습니다.</p>
+  </div>
+
+  <div class="insight-box">
+    <p class="insight-label">전환점</p>
+    <p class="insight-text">하나님처럼 되기를 원했지만,<br>결국 도달한 곳은<br><strong>자기 자신을 의식하는 자리</strong>였습니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>그들은 무화과 잎으로 자신을 가립니다. 이것은 인류가 처음으로 시도한 <strong>자기 해결의 방식</strong>입니다. 하나님 없이 문제를 덮으려는 시도입니다.</p>
+  </div>
+
+  <!-- 섹션 5 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">V · The Voice</span>
+    <h2 class="section-title">너 어디 있느냐</h2>
+  </div>
+
+  <div class="text-block">
+    <p>"그들이 여호와 하나님의 소리를 듣고…"</p>
+    <p style="margin-top: 1.5rem;">하나님은 여전히 동산을 거니십니다. 그분은 변하지 않으셨습니다. 그러나 사람은 변했습니다. 그들은 하나님의 임재를 피하여 숨습니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p><strong>죄의 본질은 단순한 행위가 아니라, 하나님의 임재로부터 멀어지는 상태</strong>임을 보여주는 장면입니다.</p>
+  </div>
+
+  <div class="word-block">
+    <p class="word-block-label">여호와 하나님의 음성</p>
+    <p class="word-block-text">"너 어디 있느냐?"</p>
+  </div>
+
+  <div class="text-block">
+    <p>이 질문은 위치를 묻는 것이 아닙니다. 사람이 지금 어떤 상태에 있는지를 스스로 깨닫게 하시려는 질문입니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>사람은 대답합니다. "두려워서 숨었습니다." 두려움이 등장합니다. 이것은 하나님과의 관계가 <strong>생명에서 판단으로 바뀌었을 때 나타나는 첫 열매</strong>입니다.</p>
+  </div>
+
+  <!-- 섹션 6 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">VI · The Blame</span>
+    <h2 class="section-title">비난의 통로</h2>
+  </div>
+
+  <div class="text-block">
+    <p>이어지는 대화 속에서 사람은 책임을 전가합니다.</p>
+    <p style="margin-top: 1.5rem; color: var(--parchment-dim);">"여자가…" &nbsp;&nbsp; "뱀이…"</p>
+    <p style="margin-top: 1.5rem;">하나님께서 주신 관계는 이제 서로를 향한 비난의 통로가 됩니다. 죄는 하나님과의 관계뿐 아니라 사람과 사람 사이의 연합도 깨뜨립니다.</p>
+  </div>
+
+  <!-- 섹션 7 — 구속의 약속 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">VII · The Promise</span>
+    <h2 class="section-title">어둠 속의 첫 빛</h2>
+  </div>
+
+  <div class="text-block">
+    <p>그러나 이 모든 가운데서도 하나님의 경륜은 멈추지 않습니다.</p>
+  </div>
+
+  <div class="promise-section">
+    <div class="promise-glow"></div>
+    <div class="word-block" style="text-align: center; border-right: none; border: 1px solid rgba(200,169,110,0.2);">
+      <p class="word-block-label" style="text-align: center; color: var(--gold-dim);">원시복음 · Protoevangelium</p>
+      <p class="word-block-text" style="text-align: center; font-size: clamp(1.05rem, 2.2vw, 1.25rem); color: var(--gold-light);">"여자의 씨는 너의 머리를 상하게 할 것이다."</p>
+      <cite style="display: block; margin-top: 1.2rem; font-family: 'Cormorant Garamond'; font-size: 0.8rem; color: var(--gold-dim); letter-spacing: 0.2em;">— 창세기 3:15</cite>
+    </div>
+  </div>
+
+  <div class="text-block">
+    <p>이 말씀은 어둠 속에 비추는 첫 번째 빛과 같습니다. 사람이 실패한 바로 그 자리에서 하나님은 이미 <strong>구속의 약속</strong>을 선언하십니다. 이것은 단순한 위로가 아니라, 하나님의 계획이 타락 이후에도 계속된다는 분명한 선언입니다.</p>
+  </div>
+
+  <!-- 섹션 8 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">VIII · The Garment</span>
+    <h2 class="section-title">가죽옷</h2>
+  </div>
+
+  <div class="text-block">
+    <p>여자에게는 해산의 고통이, 남자에게는 땅을 경작하는 수고가 주어집니다. 땅은 가시와 엉겅퀴를 내고, 삶은 땀과 수고 속에서 이어집니다.</p>
+  </div>
+
+  <div class="text-block">
+    <p>그러나 이것은 단순한 형벌이 아니라, 사람이 더 이상 자기 안에서 만족하지 못하도록 하시는 <strong>하나님의 제한이자 보호</strong>입니다.</p>
+  </div>
+
+  <div class="insight-box">
+    <p class="insight-label">The Shadow of Redemption</p>
+    <p class="insight-text">"여호와 하나님께서 가죽옷을 만들어 입히셨다."<br><br>사람은 스스로를 가렸지만, 하나님은 친히 덮으십니다.<br>가죽옷은 희생을 전제로 합니다.<br><br>이 장면은 앞으로 나타날<br><strong>구속의 길을 미리 보여주는 그림자</strong>입니다.</p>
+  </div>
+
+  <!-- 섹션 9 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-number">IX · The Gate</span>
+    <h2 class="section-title">닫힌 길, 지켜진 보호</h2>
+  </div>
+
+  <div class="text-block">
+    <p>마지막으로 하나님께서는 생명나무로 가는 길을 막으십니다.</p>
+  </div>
+
+  <div class="word-block">
+    <p class="word-block-label">여호와 하나님의 뜻</p>
+    <p class="word-block-text">"그가… 영원히 살게 해서는 안 된다."</p>
+  </div>
+
+  <div class="text-block">
+    <p>이 말씀은 거절이 아니라 깊은 보호입니다. 타락한 상태로 영원히 사는 것은 구원이 아니라 고정된 절망이기 때문입니다. 그래서 하나님은 길을 지키십니다. 그룹들과 불타는 칼로.</p>
+  </div>
+
+  <!-- 클로징 -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-diamond"></div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="closing">
+    <p class="closing-quote">사람의 타락은<br>금지된 열매를 먹은 사건이 아니라,<br>생명 대신 자신의 판단을 선택한 사건이었다.</p>
+    <p class="closing-sub">
+      그리고 그 순간에도<br>
+      하나님은 사람을 포기하지 않으셨습니다.<br><br>
+      동산에서 쫓겨나는 장면은 끝이 아니라,<br>
+      더 큰 이야기의 시작입니다.<br><br>
+      하나님께서는 이제 더 긴 시간과 더 깊은 방법을 통해<br>
+      사람을 다시 생명으로,<br>
+      그리고 결국 <strong style="color: var(--gold-light); font-weight: 500;">하나님과의 온전한 연합으로 이끄시는 길</strong>을<br>
+      펼쳐 가고 계십니다.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p>부산교회 성경인물 시리즈 &nbsp;·&nbsp; Genesis 3 &nbsp;·&nbsp; 에덴의 타락</p>
+</footer>
+
+<script>
+  // IntersectionObserver 스크롤 리빌
+  const revealTargets = document.querySelectorAll(
+    '.text-block, .dialogue-block, .word-block, .insight-box, .section-header, .section-divider, .closing, .promise-section'
+  );
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // 약간의 stagger 효과
+        setTimeout(() => {
+          entry.target.classList.add('revealed');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  revealTargets.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
