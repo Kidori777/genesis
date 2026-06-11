@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창세기 25–26장 | 세대를 잇는 약속</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* 여명 팔레트 — 어둠에서 빛으로 */
+    --dawn-sky:      #E8EEF6;   /* 새벽 하늘 */
+    --horizon-peach: #F2E4D0;   /* 수평선 노을빛 */
+    --warm-linen:    #FAF5EE;   /* 따뜻한 아마포 */
+    --amber-glow:    #D4A847;   /* 아침 햇살 금빛 */
+    --crimson-thread:#B54040;   /* 언약의 붉은 실 */
+    --deep-indigo:   #2C3A5A;   /* 깊은 새벽 남색 */
+    --soft-slate:    #4A5570;   /* 부드러운 슬레이트 */
+    --misty-sage:    #8BA898;   /* 안개 속 연두 */
+    --text-main:     #2A3040;
+    --text-muted:    #5A6478;
+    --text-light:    #8896AA;
+    --divider:       rgba(180,160,120,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Serif KR', serif;
+    background: var(--dawn-sky);
+    color: var(--text-main);
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ── 하늘 그라디언트 배경 ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,168,71,0.12) 0%, transparent 60%),
+      linear-gradient(180deg,
+        #D6E2F0 0%,
+        #E8EEF6 20%,
+        #F2E9DF 55%,
+        #FAF5EE 100%
+      );
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  /* ── 광선 오버레이 ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 600px;
+    background: conic-gradient(
+      from 260deg at 50% 0%,
+      transparent 0deg,
+      rgba(212,168,71,0.04) 8deg,
+      transparent 12deg,
+      rgba(212,168,71,0.03) 20deg,
+      transparent 24deg,
+      rgba(212,168,71,0.04) 32deg,
+      transparent 36deg,
+      rgba(212,168,71,0.05) 44deg,
+      transparent 48deg,
+      rgba(212,168,71,0.03) 56deg,
+      transparent 60deg,
+      rgba(212,168,71,0.04) 68deg,
+      transparent 72deg,
+      rgba(212,168,71,0.05) 80deg,
+      transparent 82deg
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+  }
+
+  /* Canvas 배경 */
+  #hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .hero-series-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: var(--amber-glow);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-chapter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-weight: 300;
+    color: var(--deep-indigo);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.5s forwards;
+    position: relative;
+  }
+
+  .hero-chapter span {
+    color: var(--amber-glow);
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    font-weight: 300;
+    color: var(--soft-slate);
+    letter-spacing: 0.18em;
+    margin-top: 16px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.7s forwards;
+  }
+
+  /* 여명 호 — 시그니처 요소 */
+  .dawn-arc {
+    position: relative;
+    width: 280px;
+    height: 140px;
+    margin: 0 auto 44px;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+
+  .dawn-arc svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-verse {
+    max-width: 560px;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--soft-slate);
+    line-height: 1.85;
+    border-left: 2px solid var(--amber-glow);
+    padding-left: 20px;
+    text-align: left;
+    opacity: 0;
+    animation: fadeUp 1.2s 1.1s forwards;
+  }
+
+  .hero-verse cite {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    color: var(--amber-glow);
+    font-style: normal;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s 2s forwards;
+  }
+
+  .hero-scroll-cue span {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--text-light);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--amber-glow), transparent);
+    animation: scrollPulse 2s 2s infinite;
+  }
+
+  /* ── 세대 전환 띠 ── */
+  .generation-banner {
+    background: linear-gradient(135deg, var(--deep-indigo) 0%, #3D5080 100%);
+    color: white;
+    text-align: center;
+    padding: 56px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .generation-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(212,168,71,0.15), transparent);
+  }
+
+  .generation-banner h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .generation-banner h2 em {
+    color: var(--amber-glow);
+    font-style: normal;
+  }
+
+  .generation-line {
+    width: 60px;
+    height: 2px;
+    background: var(--amber-glow);
+    margin: 20px auto 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .generation-banner p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.08em;
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* ── 본문 레이아웃 ── */
+  .main-content {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+
+  /* ── 섹션 카드 ── */
+  .section-card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 2px;
+    padding: 52px 48px;
+    margin-bottom: 48px;
+    position: relative;
+    box-shadow: 0 4px 32px rgba(44,58,90,0.06), 0 1px 4px rgba(44,58,90,0.04);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section-card.reveal-init {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  .section-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--amber-glow), var(--crimson-thread));
+    border-radius: 2px 0 0 2px;
+  }
+
+  .section-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.35em;
+    color: var(--amber-glow);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .section-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 500;
+    color: var(--deep-indigo);
+    line-height: 1.35;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-card p {
+    font-size: 1.0rem;
+    font-weight: 300;
+    color: var(--text-main);
+    line-height: 2.0;
+    margin-bottom: 20px;
+  }
+
+  .section-card p:last-child { margin-bottom: 0; }
+
+  /* ── 성경 인용 ── */
+  .scripture-block {
+    background: linear-gradient(135deg, rgba(212,168,71,0.08) 0%, rgba(242,228,208,0.6) 100%);
+    border: 1px solid rgba(212,168,71,0.25);
+    border-left: 3px solid var(--amber-glow);
+    border-radius: 0 2px 2px 0;
+    padding: 24px 28px;
+    margin: 28px 0;
+  }
+
+  .scripture-block p {
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--deep-indigo);
+    margin-bottom: 8px !important;
+    line-height: 1.85;
+  }
+
+  .scripture-block cite {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--amber-glow);
+    font-style: normal;
+  }
+
+  /* ── 강조 인사이트 ── */
+  .insight-text {
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    color: var(--deep-indigo) !important;
+  }
+
+  .insight-pill {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--deep-indigo), #3D5080);
+    color: white;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin: 4px 4px 4px 0;
+    font-weight: 400;
+  }
+
+  /* ── 세 기둥 흐름도 ── */
+  .flow-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 36px 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-node {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .flow-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: white;
+  }
+
+  .flow-circle.abraham { background: linear-gradient(135deg, #6B7FA0, #4A5A80); }
+  .flow-circle.isaac   { background: linear-gradient(135deg, var(--amber-glow), #C49030); }
+  .flow-circle.jacob   { background: linear-gradient(135deg, var(--crimson-thread), #943030); }
+
+  .flow-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    font-weight: 400;
+  }
+
+  .flow-arrow {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(to right, var(--amber-glow), var(--crimson-thread));
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .flow-arrow::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid var(--crimson-thread);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
+  /* ── 장소 순례 타임라인 ── */
+  .place-timeline {
+    margin: 32px 0;
+  }
+
+  .place-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .place-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 42px;
+    width: 2px;
+    height: calc(100% - 8px);
+    background: linear-gradient(to bottom, var(--divider), transparent);
+  }
+
+  .place-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--divider);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  .place-dot.final {
+    border-color: var(--amber-glow);
+    color: var(--amber-glow);
+    font-weight: 600;
+  }
+
+  .place-content {
+    padding-bottom: 28px;
+    flex: 1;
+  }
+
+  .place-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--deep-indigo);
+    letter-spacing: 0.05em;
+  }
+
+  .place-name.final { color: var(--amber-glow); }
+
+  .place-meaning {
+    font-size: 0.78rem;
+    color: var(--crimson-thread);
+    letter-spacing: 0.12em;
+    margin: 2px 0 6px;
+    font-weight: 400;
+  }
+
+  .place-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ── 핵심 원리 카드들 ── */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .principle-card {
+    background: rgba(255,255,255,0.85);
+    border: 1px solid rgba(212,168,71,0.2);
+    border-radius: 2px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .principle-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--amber-glow), transparent);
+  }
+
+  .principle-icon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: rgba(212,168,71,0.35);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .principle-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--deep-indigo);
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .principle-body {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── 클로징 메시지 ── */
+  .closing-section {
+    text-align: center;
+    padding: 80px 32px 100px;
+    position: relative;
+  }
+
+  .closing-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--divider), var(--amber-glow));
+  }
+
+  .closing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    color: var(--deep-indigo);
+    line-height: 1.3;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .closing-title.reveal-init { opacity: 0; transform: translateY(20px); }
+  .closing-title.visible { opacity: 1; transform: translateY(0); }
+
+  .closing-title span {
+    color: var(--amber-glow);
+  }
+
+  .closing-body {
+    max-width: 540px;
+    margin: 0 auto 40px;
+    font-size: 1.0rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 2.0;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.9s 0.2s ease, transform 0.9s 0.2s ease;
+  }
+
+  .closing-body.reveal-init { opacity: 0; transform: translateY(20px); }
+  .closing-body.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── 하단 장식 ── */
+  .footer-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 60px;
+    padding: 40px 32px;
+    border-top: 1px solid var(--divider);
+    opacity: 1;
+    transition: opacity 1s 0.4s ease;
+  }
+
+  .footer-ornament.reveal-init { opacity: 0; }
+  .footer-ornament.visible { opacity: 1; }
+
+  .footer-ornament .line {
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .footer-ornament .diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--amber-glow);
+    transform: rotate(45deg);
+  }
+
+  .footer-series {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    color: var(--text-light);
+    text-transform: uppercase;
+  }
+
+  /* ── 애니메이션 ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.4; transform: scaleY(0.6); }
+  }
+
+  /* ── 구분선 ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .divider-gem {
+    width: 6px;
+    height: 6px;
+    background: var(--amber-glow);
+    transform: rotate(45deg);
+  }
+
+  /* ── 반응형 ── */
+  @media (max-width: 640px) {
+    .section-card { padding: 36px 24px; }
+    .principle-grid { grid-template-columns: 1fr; }
+    .flow-visual { gap: 8px; }
+    .flow-arrow { width: 24px; }
+    .main-content { padding: 60px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <p class="hero-series-tag">부산교회 성경시리즈 · 창세기</p>
+
+  <h1 class="hero-chapter">창세기 <span>25–26</span>장</h1>
+  <p class="hero-title">세대를 잇는 약속</p>
+
+  <!-- 여명 호 시그니처 -->
+  <div class="dawn-arc">
+    <svg viewBox="0 0 280 140" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2C3A5A" stop-opacity="0.3"/>
+          <stop offset="50%" stop-color="#D4A847" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#B54040" stop-opacity="0.4"/>
+        </linearGradient>
+        <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#E8EEF6" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#FFF8E8" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#E8EEF6" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- 방사형 광선들 -->
+      <g opacity="0.18">
+        <line x1="140" y1="130" x2="20" y2="10" stroke="#D4A847" stroke-width="1"/>
+        <line x1="140" y1="130" x2="55" y2="4" stroke="#D4A847" stroke-width="1"/>
+        <line x1="140" y1="130" x2="95" y2="0" stroke="#D4A847" stroke-width="1.2"/>
+        <line x1="140" y1="130" x2="140" y2="0" stroke="#D4A847" stroke-width="1.5"/>
+        <line x1="140" y1="130" x2="185" y2="0" stroke="#D4A847" stroke-width="1.2"/>
+        <line x1="140" y1="130" x2="225" y2="4" stroke="#D4A847" stroke-width="1"/>
+        <line x1="140" y1="130" x2="260" y2="10" stroke="#D4A847" stroke-width="1"/>
+      </g>
+
+      <!-- 지평선 기준선 -->
+      <line x1="0" y1="130" x2="280" y2="130" stroke="rgba(44,58,90,0.15)" stroke-width="1"/>
+
+      <!-- 반원 호들 (여명 광환) -->
+      <path d="M 20 130 A 120 120 0 0 1 260 130" fill="none" stroke="url(#glowGrad)" stroke-width="20" opacity="0.4"/>
+      <path d="M 36 130 A 104 104 0 0 1 244 130" fill="none" stroke="rgba(212,168,71,0.12)" stroke-width="14"/>
+      <path d="M 56 130 A 84 84 0 0 1 224 130" fill="none" stroke="rgba(212,168,71,0.18)" stroke-width="8"/>
+      <path d="M 76 130 A 64 64 0 0 1 204 130" fill="none" stroke="rgba(212,168,71,0.28)" stroke-width="4"/>
+      <path d="M 100 130 A 40 40 0 0 1 180 130" fill="none" stroke="url(#arcGrad)" stroke-width="2.5" filter="url(#glow)"/>
+
+      <!-- 중앙 태양점 -->
+      <circle cx="140" cy="130" r="6" fill="#D4A847" opacity="0.9" filter="url(#glow)"/>
+      <circle cx="140" cy="130" r="10" fill="none" stroke="#D4A847" stroke-width="1" opacity="0.4"/>
+      <circle cx="140" cy="130" r="16" fill="none" stroke="#D4A847" stroke-width="0.5" opacity="0.25"/>
+
+      <!-- 세 이름: 아브라함·이삭·야곱 -->
+      <text x="46" y="122" font-family="Cormorant Garamond, serif" font-size="11" fill="#6B7FA0" text-anchor="middle" opacity="0.8">아브라함</text>
+      <text x="140" y="116" font-family="Cormorant Garamond, serif" font-size="11" fill="#D4A847" text-anchor="middle" opacity="1">이 삭</text>
+      <text x="234" y="122" font-family="Cormorant Garamond, serif" font-size="11" fill="#B54040" text-anchor="middle" opacity="0.8">야 곱</text>
+    </svg>
+  </div>
+
+  <blockquote class="hero-verse">
+    아브라함이 죽은 뒤, 하나님은 그의 아들 이삭에게 복을 주셨다.
+    <cite>창세기 25장 11절</cite>
+  </blockquote>
+
+  <div class="hero-scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── 세대 전환 배너 ── -->
+<div class="generation-banner">
+  <h2>한 세대가 지나고, <em>새 빛이 떠오릅니다</em></h2>
+  <div class="generation-line"></div>
+  <p>아브라함의 여명은 이삭에게, 이삭의 약속은 야곱에게 — 하나님의 경륜은 세대를 넘어 흐릅니다.</p>
+</div>
+
+<!-- ── 본문 ── -->
+<main class="main-content">
+
+  <!-- 섹션 1: 그두라와 선택 -->
+  <article class="section-card">
+    <p class="section-eyebrow">창세기 25장 1–11절</p>
+    <h2>번성과 선택 — 많은 것 가운데 하나</h2>
+
+    <p>
+      "아브라함이 후처를 얻었는데, 그녀의 이름은 그두라였다." (창 25:1)
+      이 조용한 한 구절이 열어젖히는 장면은 생각보다 깊습니다.
+      아브라함의 삶은 이미 약속의 절정을 지나고 있습니다. 그럼에도 생명은 여전히 번성합니다.
+    </p>
+
+    <p>
+      그두라를 통해 많은 자손이 나옵니다. 시므란, 욕산, 므단, 미디안… 이름들이 이어지며 생명이 퍼져 나갑니다.
+      그러나 하나님께서 관심하시는 것은 단순한 번식이 아닙니다.
+      그분의 시선은 언제나 <span class="insight-pill">선택된 생명</span>에 머물러 있습니다.
+    </p>
+
+    <div class="scripture-block">
+      <p>"아브라함은 자기가 가진 모든 것을 이삭에게 주었다."</p>
+      <cite>창세기 25장 5절</cite>
+    </div>
+
+    <p>
+      이것은 단순한 유산 분배가 아닙니다.
+      <strong class="insight-text">하나님의 경륜 안에서 선택의 선포</strong>입니다.
+      많은 자손이 있었지만, 약속은 오직 한 사람을 통해 흐릅니다.
+      다른 아들들은 선물을 받고 "동쪽으로 보내집니다."
+    </p>
+
+    <div class="scripture-block">
+      <p>"아브라함이 죽은 뒤, 하나님은 그의 아들 이삭에게 복을 주셨다."</p>
+      <cite>창세기 25장 11절</cite>
+    </div>
+
+    <p class="insight-text">
+      하나님의 약속은 사람의 생애에 묶이지 않습니다.
+      한 사람을 넘어, 세대를 이어 흐릅니다.
+    </p>
+  </article>
+
+  <div class="divider"><div class="divider-gem"></div></div>
+
+  <!-- 섹션 2: 이삭의 기도와 두 아들 -->
+  <article class="section-card">
+    <p class="section-eyebrow">창세기 25장 19–34절</p>
+    <h2>막힌 태, 그리고 태 안의 다툼</h2>
+
+    <div class="scripture-block">
+      <p>"이삭은 자기 아내가 임신하지 못하므로… 여호와께 간청하였다."</p>
+      <cite>창세기 25장 21절</cite>
+    </div>
+
+    <p>
+      약속의 계보 안에서도 생명은 쉽게 흐르지 않습니다.
+      하나님은 일부러 길을 막으시는 것처럼 보입니다.
+      이는 생명이 단순한 자연적 결과가 아니라,
+      <span class="insight-pill">하나님께로부터 오는 것</span>임을 드러내기 위함입니다.
+    </p>
+
+    <div class="scripture-block">
+      <p>"태 안에 있는 아이들이 서로 다투었다."</p>
+      <cite>창세기 25장 22절</cite>
+    </div>
+
+    <p>
+      이것은 단순한 태아의 움직임이 아닙니다.
+      하나님께서 그 안에 두 세계, 두 흐름, 두 민족을 넣어 놓으신 것입니다.
+    </p>
+
+    <div class="scripture-block">
+      <p>"형이 동생을 섬길 것이다."</p>
+      <cite>창세기 25장 23절</cite>
+    </div>
+
+    <p>
+      이 선언은 창조의 질서를 뒤집는 것처럼 보입니다.
+      그러나 이것이 바로 하나님의 방식입니다.
+      <strong class="insight-text">하나님은 사람의 기준이 아닌, 자신의 선택에 따라 일하십니다.</strong>
+    </p>
+
+    <div class="principle-grid">
+      <div class="principle-card">
+        <div class="principle-icon">ε</div>
+        <p class="principle-title">에서 — 먼저 나왔지만</p>
+        <p class="principle-body">장자권을 "팥죽 한 그릇"에 팔아버림. 눈앞의 것을 영적 유산보다 중히 여기는 마음.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">ι</div>
+        <p class="principle-title">야곱 — 뒤에 나왔지만</p>
+        <p class="principle-body">선택된 사람이었으나 아직 미성숙. 하나님을 기다리지 못하고 자신의 방식으로 축복을 붙잡으려 함.</p>
+      </div>
+    </div>
+
+    <p>
+      에서는 장자권을 경시하였습니다. 하나님께서 주시는 것은 보이지 않기 때문에,
+      사람은 종종 그것을 가볍게 여깁니다.
+      그러나 하나님의 경륜은 언제나 <strong class="insight-text">보이지 않는 것을 중심으로 진행됩니다.</strong>
+    </p>
+  </article>
+
+  <div class="divider"><div class="divider-gem"></div></div>
+
+  <!-- 섹션 3: 이삭의 여정 — 우물들 -->
+  <article class="section-card">
+    <p class="section-eyebrow">창세기 26장</p>
+    <h2>이삭의 길 — 쟁취 대신 인도를 따라</h2>
+
+    <p>
+      기근이 다시 찾아옵니다. 아브라함 때와 동일한 상황입니다.
+      그러나 하나님의 말씀은 명확합니다.
+    </p>
+
+    <div class="scripture-block">
+      <p>"이집트로 내려가지 말고… 내가 일러 주는 땅에 거주하여라."</p>
+      <cite>창세기 26장 2절</cite>
+    </div>
+
+    <p>
+      하나님은 환경을 바꾸기보다, 사람을 그 자리에서 붙드십니다.
+      중요한 것은 장소가 아니라, <span class="insight-pill">하나님의 임재</span>이기 때문입니다.
+    </p>
+
+    <p>
+      그해에 백 배의 수확. 이것은 단순한 농사의 성공이 아닙니다.
+      기근 속에서 백 배의 결실—
+      하나님께서 <strong class="insight-text">환경을 초월하여 역사하신다는 증거</strong>입니다.
+      그러나 축복은 곧 갈등을 불러옵니다. 우물마다 다툼이 일어납니다.
+    </p>
+
+    <!-- 우물 순례 타임라인 -->
+    <div class="place-timeline">
+      <div class="place-item">
+        <div class="place-dot">1</div>
+        <div class="place-content">
+          <p class="place-name">에 섹</p>
+          <p class="place-meaning">다 툼</p>
+          <p class="place-desc">첫 번째 우물. 다툼이 일어나자 이삭은 싸우지 않고 자리를 비웁니다.</p>
+        </div>
+      </div>
+      <div class="place-item">
+        <div class="place-dot">2</div>
+        <div class="place-content">
+          <p class="place-name">싯 나</p>
+          <p class="place-meaning">적 대</p>
+          <p class="place-desc">두 번째 우물. 적대감이 계속되지만 이삭은 또 한 번 옮깁니다.</p>
+        </div>
+      </div>
+      <div class="place-item">
+        <div class="place-dot final">✦</div>
+        <div class="place-content">
+          <p class="place-name final">르호봇 · 브엘세바</p>
+          <p class="place-meaning">넓은 곳 · 하나님이 열어 주신 자리</p>
+          <p class="place-desc">"이제 여호와께서 우리에게 넓은 곳을 주셨으니…" — 하나님의 경륜은 쟁취로 이루어지지 않고, 인도로 이루어집니다. 이삭은 브엘세바에서 처음으로 개인적인 만남의 자리를 갖습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scripture-block">
+      <p>"나는 너의 아버지 아브라함의 하나님이다. 두려워하지 마라."</p>
+      <cite>창세기 26장 24절</cite>
+    </div>
+
+    <p class="insight-text">
+      여기서 처음으로 이삭의 삶이 단순한 "계승"을 넘어
+      개인적인 관계로 들어갑니다.
+    </p>
+  </article>
+
+  <div class="divider"><div class="divider-gem"></div></div>
+
+  <!-- 섹션 4: 흐름 요약 -->
+  <article class="section-card">
+    <p class="section-eyebrow">창세기 25–26장의 경륜</p>
+    <h2>선택, 다루심, 그리고 연합</h2>
+
+    <p>이 모든 흐름은 하나로 모입니다.</p>
+
+    <!-- 세 기둥 흐름도 -->
+    <div class="flow-visual">
+      <div class="flow-node">
+        <div class="flow-circle abraham">亞</div>
+        <p class="flow-label">아브라함<br>계승의 완성</p>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-node">
+        <div class="flow-circle isaac">以</div>
+        <p class="flow-label">이 삭<br>약속 안에 거함</p>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-node">
+        <div class="flow-circle jacob">야</div>
+        <p class="flow-label">야 곱<br>선택받은 생명</p>
+      </div>
+    </div>
+
+    <p>
+      많은 자손 가운데 하나를 택하시고,
+      그 하나를 다루어,
+      결국 하나님과 연합된 사람을 얻고자 하십니다.
+    </p>
+
+    <div class="principle-grid">
+      <div class="principle-card">
+        <div class="principle-icon">↓</div>
+        <p class="principle-title">약속은 사람의 생애에 묶이지 않습니다</p>
+        <p class="principle-body">아브라함이 죽은 뒤에도 이삭에게 복이 임했습니다. 하나님의 경륜은 한 사람을 넘어 세대를 이어 흐릅니다.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">↑</div>
+        <p class="principle-title">생명은 하나님께로부터 옵니다</p>
+        <p class="principle-body">막힌 태, 막힌 우물 — 하나님은 일부러 막으심으로 모든 열림이 그분께서 주신 것임을 드러내십니다.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">◈</div>
+        <p class="principle-title">쟁취보다 인도</p>
+        <p class="principle-body">이삭은 싸우지 않고 옮겼습니다. 하나님의 뜻은 붙잡는 것이 아니라, 열어 주시는 것을 받는 것입니다.</p>
+      </div>
+      <div class="principle-card">
+        <div class="principle-icon">✦</div>
+        <p class="principle-title">계승을 넘어 관계로</p>
+        <p class="principle-body">브엘세바에서 이삭은 아버지의 하나님이 자신의 하나님이 되시는 개인적 만남을 경험합니다.</p>
+      </div>
+    </div>
+
+    <p>
+      창세기 25장과 26장은 겉으로는 가족 이야기, 갈등, 축복의 기록처럼 보입니다.
+      그러나 그 깊은 곳에는 하나의 흐름이 있습니다—
+      <strong class="insight-text">창조된 생명이 선택을 거치고, 다루어짐을 통과하여, 마침내 하나님과 연결되는 길.</strong>
+    </p>
+  </article>
+
+</main>
+
+<!-- ── 클로징 ── -->
+<section class="closing-section">
+  <h2 class="closing-title">그 경륜은<br><span>여전히 이어지고 있습니다</span></h2>
+  <p class="closing-body">
+    이것이 하나님께서 이루고자 하시는 경륜입니다.<br>
+    아브라함에서 이삭으로, 이삭에서 야곱으로,<br>
+    그리고 마침내 예수 그리스도 안에서 완성됩니다.
+  </p>
+
+  <div class="footer-ornament">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <p class="footer-series">부산교회 성경시리즈 · Genesis 25–26</p>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- ── Canvas Hero 애니메이션 ── -->
+<script>
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  // 떠오르는 빛 입자들
+  class Particle {
+    constructor() { this.reset(true); }
+
+    reset(init) {
+      this.x  = Math.random() * W;
+      this.y  = init ? Math.random() * H : H + 10;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = -(Math.random() * 0.6 + 0.2);
+      this.r  = Math.random() * 2.5 + 0.5;
+      this.life = 0;
+      this.maxLife = Math.random() * 200 + 120;
+      const warm = Math.random();
+      if (warm < 0.5)      this.color = `rgba(212,168,71,`;
+      else if (warm < 0.8) this.color = `rgba(181,64,64,`;
+      else                 this.color = `rgba(44,58,90,`;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life++;
+      if (this.life > this.maxLife || this.y < -10) this.reset(false);
+    }
+
+    draw() {
+      const t = this.life / this.maxLife;
+      const a = t < 0.2 ? t / 0.2 : t > 0.7 ? (1 - t) / 0.3 : 1;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + (a * 0.45) + ')';
+      ctx.fill();
+    }
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: 80 }, () => new Particle());
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+
+    // 여명 그라디언트 오버레이
+    const grad = ctx.createRadialGradient(W / 2, H, 0, W / 2, H, H * 0.9);
+    grad.addColorStop(0, 'rgba(212,168,71,0.06)');
+    grad.addColorStop(0.5, 'rgba(232,214,165,0.03)');
+    grad.addColorStop(1, 'rgba(214,226,240,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    particles.forEach(p => { p.update(); p.draw(); });
+    animId = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  init();
+  loop();
+})();
+</script>
+
+<!-- ── 스크롤 reveal ── -->
+<script>
+(function() {
+  const TARGETS = '.section-card, .closing-title, .closing-body, .footer-ornament';
+
+  function revealAll() {
+    document.querySelectorAll(TARGETS).forEach(el => {
+      el.classList.remove('reveal-init');
+      el.classList.add('visible');
+    });
+  }
+
+  // IntersectionObserver 미지원 환경 즉시 표시
+  if (!window.IntersectionObserver) { revealAll(); return; }
+
+  // 안전 폴백: 1.5초 후 강제 표시
+  const fallback = setTimeout(revealAll, 1500);
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('reveal-init');
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+  // DOM 준비 후 reveal-init 부착 → 관찰 시작
+  document.querySelectorAll(TARGETS).forEach(el => {
+    el.classList.add('reveal-init');
+    io.observe(el);
+  });
+
+  // 모든 요소 reveal 완료 시 폴백 취소
+  let count = document.querySelectorAll(TARGETS).length;
+  const origCallback = io.takeRecords.bind(io);
+  document.querySelectorAll(TARGETS).forEach(el => {
+    el.addEventListener('transitionend', () => {
+      count--;
+      if (count <= 0) clearTimeout(fallback);
+    }, { once: true });
+  });
+})();
+</script>
+
+</body>
+</html>

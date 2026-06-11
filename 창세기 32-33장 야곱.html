@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>야곱 — 깨어진 자가 하나님을 붙잡다 | 부산교회 성경 인물 시리즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c87a;
+    --gold-dim: #7a6030;
+    --crimson: #8b1a1a;
+    --crimson-light: #b22222;
+    --parchment-bg: #0d0b08;
+    --parchment-mid: #12100c;
+    --parchment-surface: #1a1610;
+    --parchment-card: #1f1c14;
+    --text-primary: #e8dfc8;
+    --text-secondary: #b8a888;
+    --text-dim: #7a6e58;
+    --divider: rgba(201,168,76,0.18);
+    --crack: rgba(201,168,76,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--parchment-bg);
+    color: var(--text-primary);
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 400;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS HERO ── */
+  #hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .series-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: 0.28em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.3s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(72px, 14vw, 140px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.6s forwards;
+    text-shadow: 0 0 80px rgba(201,168,76,0.25);
+  }
+
+  .hero-subtitle {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 300;
+    color: var(--text-secondary);
+    letter-spacing: 0.12em;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.9s forwards;
+  }
+
+  .hero-verse {
+    margin-top: 36px;
+    padding: 18px 28px;
+    border: 1px solid var(--divider);
+    background: rgba(13,11,8,0.6);
+    backdrop-filter: blur(8px);
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.2s forwards;
+  }
+
+  .hero-verse p {
+    font-size: clamp(12px, 1.8vw, 14px);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .hero-verse .ref {
+    display: block;
+    margin-top: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1.2s ease 2s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ── NAVIGATION THREAD ── */
+  .chapter-nav {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .nav-dot.active,
+  .nav-dot:hover {
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  }
+
+  .nav-dot .tooltip {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--parchment-card);
+    border: 1px solid var(--divider);
+    padding: 4px 10px;
+    white-space: nowrap;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .nav-dot:hover .tooltip { opacity: 1; }
+
+  /* ── MAIN CONTENT ── */
+  main { max-width: 780px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── SECTION BLOCK ── */
+  .section-block {
+    padding: 100px 0;
+    border-bottom: 1px solid var(--divider);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .section-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-block:last-of-type { border-bottom: none; }
+
+  /* ── EYEBROW / LOCATION ── */
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .eyebrow-place {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .eyebrow-line {
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .eyebrow-ref {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+  }
+
+  /* ── HEADINGS ── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  h2 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3.5vw, 28px);
+    font-weight: 600;
+    color: var(--gold-dim);
+    margin-bottom: 18px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── BODY TEXT ── */
+  p {
+    font-size: clamp(14px, 1.8vw, 16px);
+    color: var(--text-secondary);
+    line-height: 2;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  p strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* ── SCRIPTURE BLOCK ── */
+  .scripture {
+    margin: 36px 0;
+    padding: 28px 32px 24px;
+    border-left: 2px solid var(--gold);
+    background: rgba(201,168,76,0.04);
+    position: relative;
+  }
+
+  .scripture::before {
+    content: '"';
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    color: var(--gold);
+    line-height: 1;
+    opacity: 0.35;
+  }
+
+  .scripture p {
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.85;
+    margin: 0;
+  }
+
+  .scripture .verse-ref {
+    display: block;
+    margin-top: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+  }
+
+  /* ── TURNING POINT BOX ── */
+  .turning-point {
+    margin: 48px 0;
+    padding: 36px 40px;
+    background: var(--parchment-card);
+    border: 1px solid var(--divider);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .turning-point::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--crimson), transparent);
+  }
+
+  .turning-point-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--crimson-light);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .turning-point p {
+    font-size: clamp(15px, 2vw, 17px);
+    color: var(--text-primary);
+    font-weight: 500;
+    margin: 0;
+    line-height: 2;
+  }
+
+  /* ── CONTRAST PANEL ── */
+  .contrast-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 40px 0;
+    background: var(--divider);
+  }
+
+  .contrast-cell {
+    background: var(--parchment-surface);
+    padding: 28px 28px;
+  }
+
+  .contrast-cell .cell-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .contrast-cell.before .cell-label { color: var(--text-dim); }
+  .contrast-cell.after .cell-label { color: var(--gold); }
+
+  .contrast-cell p {
+    font-size: 14px;
+    line-height: 1.85;
+    margin: 0;
+  }
+
+  .contrast-cell.before p { color: var(--text-dim); }
+  .contrast-cell.after p { color: var(--text-secondary); }
+
+  /* ── PENIEL SCENE ── */
+  .peniel-scene {
+    margin: 60px -32px;
+    padding: 80px 64px;
+    background: var(--parchment-surface);
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .peniel-scene::before {
+    content: 'בְּרָכָה';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 200px;
+    color: rgba(201,168,76,0.025);
+    pointer-events: none;
+    line-height: 1;
+    font-family: serif;
+  }
+
+  .peniel-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.4;
+    position: relative;
+    max-width: 560px;
+    margin: 0 auto 20px;
+  }
+
+  .peniel-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    position: relative;
+  }
+
+  /* ── NAME CHANGE VISUAL ── */
+  .name-change {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    margin: 48px 0;
+    flex-wrap: wrap;
+  }
+
+  .name-tag {
+    text-align: center;
+  }
+
+  .name-tag .name-hebrew {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .name-tag.old .name-hebrew { color: var(--text-dim); }
+  .name-tag.new .name-hebrew { color: var(--gold); text-shadow: 0 0 40px rgba(201,168,76,0.3); }
+
+  .name-tag .name-korean {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+  }
+
+  .name-tag.new .name-korean { color: var(--text-secondary); }
+
+  .name-tag .name-meaning {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  .name-tag.old .name-meaning { color: var(--crimson); }
+  .name-tag.new .name-meaning { color: var(--gold-dim); }
+
+  .arrow-symbol {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--divider);
+    flex-shrink: 0;
+  }
+
+  /* ── LIMP MARKER ── */
+  .limp-line {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 40px 0;
+    padding: 22px 28px;
+    background: var(--parchment-card);
+    border: 1px solid var(--divider);
+  }
+
+  .limp-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .limp-line p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ── ESAU SCENE ── */
+  .embrace-scene {
+    margin: 48px 0;
+    padding: 40px 40px;
+    background: linear-gradient(135deg, rgba(139,26,26,0.05), rgba(201,168,76,0.05));
+    border: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  .embrace-scene .big-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+
+  .embrace-scene p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* ── PROVIDENCE FLOW ── */
+  .providence-flow {
+    margin: 60px 0;
+  }
+
+  .flow-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .flow-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 44px;
+    width: 1px;
+    height: calc(100% + 1px);
+    background: var(--divider);
+  }
+
+  .flow-num {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--divider);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold-dim);
+    background: var(--parchment-bg);
+    position: relative;
+    z-index: 1;
+  }
+
+  .flow-content {
+    padding: 10px 0 40px;
+    flex: 1;
+  }
+
+  .flow-content h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .flow-content p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── CLOSING DECLARATION ── */
+  .closing {
+    text-align: center;
+    padding: 120px 0 80px;
+    position: relative;
+  }
+
+  .closing-cross {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    margin: 0 auto 48px;
+  }
+
+  .closing h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .closing p {
+    max-width: 560px;
+    margin: 0 auto 28px;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 2;
+  }
+
+  .closing .altar-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin: 36px 0 12px;
+  }
+
+  .closing .altar-meaning {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--divider);
+  }
+
+  footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    main { padding: 0 20px; }
+    .peniel-scene { margin: 60px -20px; padding: 60px 28px; }
+    .peniel-scene::before { font-size: 120px; }
+    .contrast-panel { grid-template-columns: 1fr; }
+    .chapter-nav { right: 14px; }
+    .name-change { gap: 16px; }
+    .arrow-symbol { font-size: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-block { opacity: 1; transform: none; transition: none; }
+    * { animation-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-content">
+    <p class="series-label">부산교회 성경 인물 시리즈 · 창세기 32–33장</p>
+    <h1 class="hero-name">야곱</h1>
+    <p class="hero-subtitle">깨어진 자가 하나님을 붙잡다</p>
+    <div class="hero-verse">
+      <p>야곱은 혼자 거기 남아 있었다.<br>그런데 어떤 사람이 날이 샐 때까지 야곱과 씨름을 하였다.</p>
+      <span class="ref">창세기 32:24</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ NAVIGATION ══ -->
+<nav class="chapter-nav" aria-label="섹션 이동">
+  <div class="nav-dot active" data-target="s1"><span class="tooltip">마하나임</span></div>
+  <div class="nav-dot" data-target="s2"><span class="tooltip">두려움</span></div>
+  <div class="nav-dot" data-target="s3"><span class="tooltip">기도</span></div>
+  <div class="nav-dot" data-target="s4"><span class="tooltip">브니엘</span></div>
+  <div class="nav-dot" data-target="s5"><span class="tooltip">이스라엘</span></div>
+  <div class="nav-dot" data-target="s6"><span class="tooltip">에서</span></div>
+  <div class="nav-dot" data-target="s7"><span class="tooltip">경륜</span></div>
+</nav>
+
+<main>
+
+  <!-- ══ S1 마하나임 ══ -->
+  <section class="section-block" id="s1">
+    <div class="eyebrow">
+      <span class="eyebrow-place">마하나임 · 두 진영</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 32:1–2</span>
+    </div>
+
+    <h2>하나님은 그를<br><em>혼자 가게 두지 않으셨다</em></h2>
+
+    <p>야곱은 여전히 도망자처럼 길을 가고 있었습니다. 그러나 그 순간, 하나님의 천사들이 그에게 나타납니다. 이것은 단순한 이동의 기록이 아닙니다.</p>
+
+    <div class="scripture">
+      <p>야곱이 길을 떠나서 가고 있는데, 하나님의 천사들이 그에게 나타났다.</p>
+      <span class="verse-ref">창세기 32:1</span>
+    </div>
+
+    <p>야곱은 그것을 보고 말합니다. "이들은 하나님의 진영이로구나." 그리하여 그곳의 이름을 <strong>마하나임</strong>—"두 진영"—이라 부릅니다.</p>
+
+    <div class="contrast-panel">
+      <div class="contrast-cell before">
+        <div class="cell-label">보이는 진영</div>
+        <p>야곱의 가족과 재산.<br>그가 붙잡고 있는 것들.</p>
+      </div>
+      <div class="contrast-cell after">
+        <div class="cell-label">보이지 않는 진영</div>
+        <p>하나님의 진영.<br>이미 그를 둘러싸고 있었다.</p>
+      </div>
+    </div>
+
+    <p>창조의 하나님은 사람의 삶 속에 여전히 개입하고 계십니다. 그분의 목적은 단순한 보호가 아니라, <strong>이끌어 가심</strong>에 있습니다.</p>
+  </section>
+
+  <!-- ══ S2 두려움 ══ -->
+  <section class="section-block" id="s2">
+    <div class="eyebrow">
+      <span class="eyebrow-place">에서를 향해 보낸 소식</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 32:3–8</span>
+    </div>
+
+    <h2>하나님의 진영을 보고도<br><em>자신의 계산으로 지키려 했다</em></h2>
+
+    <p>야곱은 형 에서를 향해 사람을 보냅니다. 형을 "주인"이라 부르고 자신을 "종"이라 낮추며, 관계를 회복하려 하지만 그 방식은 여전히 사람의 방식입니다.</p>
+
+    <p>그리고 소식이 돌아옵니다.</p>
+
+    <div class="scripture">
+      <p>그분도 사백 명을 거느리고 주인님을 만나러 오고 계십니다.</p>
+      <span class="verse-ref">창세기 32:6</span>
+    </div>
+
+    <div class="turning-point">
+      <div class="turning-point-label">인간의 모순</div>
+      <p>마하나임에서 "하나님의 두 진영"을 보았던 사람이, 이제는 "자기의 두 진영"을 만듭니다. 하나님의 진영을 보았지만, 여전히 자신의 계산으로 자신을 지키려 합니다.</p>
+    </div>
+
+    <p>이것이 타락한 인간의 상태입니다. 하나님을 알면서도, 여전히 자기 자신을 의지하는 존재.</p>
+  </section>
+
+  <!-- ══ S3 기도 ══ -->
+  <section class="section-block" id="s3">
+    <div class="eyebrow">
+      <span class="eyebrow-place">야곱의 기도</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 32:9–21</span>
+    </div>
+
+    <h2>기도하면서도<br><em>여전히 계산했다</em></h2>
+
+    <p>그 순간, 야곱은 기도하기 시작합니다. 그리고 처음으로 자신의 무자격을 인정합니다.</p>
+
+    <div class="scripture">
+      <p>저는 주님께서 이 종에게 베푸신 모든 자애와 신실을 감히 받을 자격이 없는 사람입니다.</p>
+      <span class="verse-ref">창세기 32:10</span>
+    </div>
+
+    <div class="scripture">
+      <p>제가 지팡이 하나만 가지고 이 요단강을 건넜는데 지금은 두 진영이나 이루었습니다.</p>
+      <span class="verse-ref">창세기 32:10</span>
+    </div>
+
+    <p>이 고백 속에는 하나님의 경륜이 스며 있습니다. 사람이 아무것도 없을 때 시작하여, 하나님께서 그를 번성하게 하셨다는 사실—이것은 단순한 축복의 이야기가 아니라 <strong>생명이 자라는 과정</strong>입니다.</p>
+
+    <div class="turning-point">
+      <div class="turning-point-label">아직 깨어지지 않은 사람</div>
+      <p>야곱은 기도하면서도 여전히 선물을 준비합니다. "선물을 먼저 보내어 형의 마음을 풀어 주어야겠다." 기도와 계산이 동시에 존재하는 상태, 이것이 아직 깨어지지 않은 사람입니다.</p>
+    </div>
+  </section>
+
+  <!-- ══ S4 브니엘 ══ -->
+  <section class="section-block" id="s4">
+    <div class="eyebrow">
+      <span class="eyebrow-place">브니엘 · 하나님의 얼굴</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 32:24–30</span>
+    </div>
+
+    <h2>모든 것을 보내고<br><em>혼자 남겨진 자리</em></h2>
+
+    <div class="scripture">
+      <p>야곱은 혼자 거기 남아 있었다. 그런데 어떤 사람이 날이 샐 때까지 야곱과 씨름을 하였다.</p>
+      <span class="verse-ref">창세기 32:24</span>
+    </div>
+
+    <p>사람이 의지하던 모든 것을 내려놓고 나서야, 하나님은 그 사람을 직접 만나십니다. 그 씨름은 단순한 싸움이 아닙니다. 그것은 <strong>"야곱이라는 존재" 자체를 다루시는 하나님의 손길</strong>입니다.</p>
+
+    <p>그리고 결정적인 순간이 옵니다.</p>
+
+    <div class="scripture">
+      <p>그 사람은 야곱의 엉덩이뼈를 쳤다.</p>
+      <span class="verse-ref">창세기 32:25</span>
+    </div>
+
+    <p>야곱의 힘의 근원이 무너집니다. 그는 더 이상 자신의 힘으로 설 수 없는 사람이 됩니다. 그러나 그때 야곱은 말합니다.</p>
+
+    <div class="peniel-scene">
+      <p class="peniel-quote">"나를 축복하지 않으시면,<br>보내 드리지 않겠습니다."</p>
+      <p class="peniel-sub">창세기 32:26</p>
+    </div>
+
+    <p>힘이 있을 때는 하나님을 붙잡지 않던 사람이, 힘이 꺾인 후에야 하나님을 붙잡습니다.</p>
+
+    <div class="turning-point">
+      <div class="turning-point-label">하나님의 경륜</div>
+      <p>사람을 강하게 만드는 것이 아니라, "하나님을 붙잡을 수밖에 없는 존재"로 만드시는 것.</p>
+    </div>
+  </section>
+
+  <!-- ══ S5 이스라엘 ══ -->
+  <section class="section-block" id="s5">
+    <div class="eyebrow">
+      <span class="eyebrow-place">이름이 바뀌다</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 32:27–31</span>
+    </div>
+
+    <h2>존재의<em> 전환</em></h2>
+
+    <p>하나님은 묻습니다. "그대의 이름이 무엇이오?" 야곱이 대답합니다. "야곱입니다." 하나님은 그의 과거, 그의 본질을 스스로 인정하게 하십니다. 그때 하나님이 선언하십니다.</p>
+
+    <div class="scripture">
+      <p>이제부터 그대의 이름을 더 이상 야곱이라 하지 않고 이스라엘이라고 할 것이오.</p>
+      <span class="verse-ref">창세기 32:28</span>
+    </div>
+
+    <div class="name-change">
+      <div class="name-tag old">
+        <div class="name-hebrew">יַעֲקֹב</div>
+        <div class="name-korean">야곱</div>
+        <div class="name-meaning">속이는 자</div>
+      </div>
+      <div class="arrow-symbol">→</div>
+      <div class="name-tag new">
+        <div class="name-hebrew">יִשְׂרָאֵל</div>
+        <div class="name-korean">이스라엘</div>
+        <div class="name-meaning">하나님과 함께 싸워 이김</div>
+      </div>
+    </div>
+
+    <p>이것은 단순한 이름 변경이 아닙니다. <strong>존재의 전환</strong>입니다. 자기 힘으로 살아온 사람이, 하나님과 관계 속에서 살아가는 사람으로 바뀝니다.</p>
+
+    <div class="limp-line">
+      <div class="limp-icon">🦯</div>
+      <p>그는 그곳을 브니엘—"하나님의 얼굴"—이라 부릅니다. 그리고 해가 떠오를 때, <strong>그는 엉덩이 때문에 절뚝거렸습니다.</strong> 겉으로는 더 약해졌지만, 내적으로는 하나님과 연결된 사람이 되었습니다.</p>
+    </div>
+
+    <p>하나님은 완전한 사람을 선택하지 않으십니다. 깨어진 사람을 통해, 새로운 존재를 만들어 가십니다.</p>
+  </section>
+
+  <!-- ══ S6 에서 ══ -->
+  <section class="section-block" id="s6">
+    <div class="eyebrow">
+      <span class="eyebrow-place">에서와의 만남</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 33:1–10</span>
+    </div>
+
+    <h2>두려웠던 형이<br><em>그를 품었다</em></h2>
+
+    <p>야곱은 일곱 번 땅에 엎드립니다. 그러나 놀라운 일이 일어납니다.</p>
+
+    <div class="scripture">
+      <p>에서가 야곱에게 달려와 그를 맞이하여 부둥켜안고… 그들은 함께 울었다.</p>
+      <span class="verse-ref">창세기 33:4</span>
+    </div>
+
+    <div class="embrace-scene">
+      <div class="big-word">함께 울었다</div>
+      <p>야곱이 두려워했던 형이, 그를 죽이려 올 것 같던 형이, 오히려 그를 품습니다.</p>
+    </div>
+
+    <p>이 장면은 단순한 화해가 아닙니다. 하나님의 경륜 속에서 "연합"이 이루어지는 순간입니다.</p>
+
+    <div class="scripture">
+      <p>내가 주인님의 얼굴을 뵌 것이 마치 하나님의 얼굴을 뵌 것 같습니다.</p>
+      <span class="verse-ref">창세기 33:10</span>
+    </div>
+
+    <div class="turning-point">
+      <div class="turning-point-label">변화의 증거</div>
+      <p>브니엘에서 하나님을 보았던 사람이, 이제 형의 얼굴에서도 하나님을 봅니다. 하나님을 만난 사람은, 사람을 보는 눈도 바뀝니다.</p>
+    </div>
+  </section>
+
+  <!-- ══ S7 경륜 ══ -->
+  <section class="section-block" id="s7">
+    <div class="eyebrow">
+      <span class="eyebrow-place">하나님의 경륜</span>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-ref">창세기 33:18–20</span>
+    </div>
+
+    <h2>한 사람을 통해<br><em>장대한 경륜을 이루시다</em></h2>
+
+    <p>야곱은 가나안으로 돌아오지만, 세겜에 머물며 제단을 세웁니다.</p>
+
+    <div class="scripture">
+      <p>야곱은 그곳에 제단을 세우고… 엘엘로헤이스라엘이라 하였다.</p>
+      <span class="verse-ref">창세기 33:20</span>
+    </div>
+
+    <p>"이스라엘의 하나님은 하나님이시다." 야곱이 이제 "자기 하나님"이 아니라 "이스라엘의 하나님"을 인정하는 선언입니다.</p>
+
+    <div class="providence-flow">
+      <div class="flow-item">
+        <div class="flow-num">一</div>
+        <div class="flow-content">
+          <h4>선택하심</h4>
+          <p>창조의 하나님은 한 사람을 선택하시고.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">二</div>
+        <div class="flow-content">
+          <h4>자라게 하심</h4>
+          <p>그 사람의 삶을 통해 생명을 자라게 하시며.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">三</div>
+        <div class="flow-content">
+          <h4>깨뜨리고 변화시키심</h4>
+          <p>그를 깨뜨리고 변화시키셔서 새로운 존재로 만드시고.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">四</div>
+        <div class="flow-content">
+          <h4>관계를 회복시키심</h4>
+          <p>마침내 사람과 사람 사이의 관계까지 회복시키십니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLOSING ══ -->
+  <section class="closing">
+    <div class="closing-cross"></div>
+
+    <h2>야곱의 이야기는<br>하나님의 이야기입니다</h2>
+
+    <p>그것은 단순히 야곱 한 사람의 변화가 아니라, "이스라엘"이라는 공동체, 곧 하나님과 연합된 백성을 얻으시는 장대한 경륜의 한 장면입니다.</p>
+
+    <p>사람을 통해 자신의 형상을 이루고, 관계 속에서 자신을 나타내며, 마침내 사람과 하나 되기를 원하시는 그 여정은—</p>
+
+    <div class="altar-name">지금도 계속되고 있습니다</div>
+    <div class="altar-meaning">엘엘로헤이스라엘 · 이스라엘의 하나님은 하나님이시다</div>
+  </section>
+
+</main>
+
+<footer>
+  <p>부산교회 성경 인물 시리즈 · 창세기 32–33장 · 야곱</p>
+</footer>
+
+<script>
+// ── HERO CANVAS: 씨름하는 불꽃과 새벽빛 ──
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], embers = [];
+  let tick = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 새벽빛 파티클 (별/먼지)
+  for (let i = 0; i < 160; i++) {
+    particles.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 2000,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random(),
+      speed: Math.random() * 0.003 + 0.001,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  // 불꽃 파티클
+  function spawnEmber() {
+    const cx = W * 0.5 + (Math.random() - 0.5) * 60;
+    embers.push({
+      x: cx,
+      y: H * 0.72,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: -(Math.random() * 2.2 + 0.8),
+      life: 1,
+      decay: Math.random() * 0.012 + 0.006,
+      r: Math.random() * 3 + 1,
+      gold: Math.random() > 0.4
+    });
+  }
+
+  function draw() {
+    tick++;
+    ctx.clearRect(0, 0, W, H);
+
+    // 배경 그라디언트
+    const bg = ctx.createRadialGradient(W/2, H*0.65, 0, W/2, H*0.5, H*0.85);
+    bg.addColorStop(0, 'rgba(30,18,6,0.92)');
+    bg.addColorStop(0.5, 'rgba(13,11,8,0.96)');
+    bg.addColorStop(1, 'rgba(8,7,5,1)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // 새벽빛 발광 (하단)
+    const dawn = ctx.createRadialGradient(W/2, H, 0, W/2, H*0.7, H*0.6);
+    dawn.addColorStop(0, 'rgba(201,168,76,0.07)');
+    dawn.addColorStop(0.4, 'rgba(139,26,26,0.04)');
+    dawn.addColorStop(1, 'transparent');
+    ctx.fillStyle = dawn;
+    ctx.fillRect(0, 0, W, H);
+
+    // 별빛/먼지
+    particles.forEach(p => {
+      const pulse = Math.sin(tick * p.speed + p.phase);
+      const alpha = (0.15 + p.a * 0.35) * (0.7 + 0.3 * pulse);
+      ctx.beginPath();
+      ctx.arc(p.x % W, p.y % H, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,168,76,${alpha})`;
+      ctx.fill();
+    });
+
+    // 불꽃
+    if (tick % 4 === 0) { spawnEmber(); spawnEmber(); }
+    embers.forEach((e, i) => {
+      e.x += e.vx + Math.sin(tick * 0.05 + i) * 0.3;
+      e.y += e.vy;
+      e.vy *= 0.99;
+      e.life -= e.decay;
+
+      if (e.life <= 0) { embers.splice(i, 1); return; }
+
+      const alpha = e.life * 0.85;
+      const color = e.gold ? `rgba(201,168,76,${alpha})` : `rgba(139,26,26,${alpha * 0.7})`;
+      const grd = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 3);
+      grd.addColorStop(0, color);
+      grd.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+
+    // 수평선 빛줄기
+    const beam = ctx.createLinearGradient(0, H*0.68, 0, H*0.74);
+    beam.addColorStop(0, 'transparent');
+    beam.addColorStop(0.5, `rgba(201,168,76,${0.04 + 0.02 * Math.sin(tick * 0.01)})`);
+    beam.addColorStop(1, 'transparent');
+    ctx.fillStyle = beam;
+    ctx.fillRect(0, H*0.68, W, H*0.06);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.section-block').forEach(el => observer.observe(el));
+
+// ── NAV DOTS ──
+const dots = document.querySelectorAll('.nav-dot');
+const sections = document.querySelectorAll('.section-block');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      dots.forEach(d => d.classList.remove('active'));
+      const dot = document.querySelector(`.nav-dot[data-target="${id}"]`);
+      if (dot) dot.classList.add('active');
+    }
+  });
+}, { threshold: 0.5 });
+
+sections.forEach(s => navObserver.observe(s));
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

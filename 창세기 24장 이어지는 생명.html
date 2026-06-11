@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창세기 24장 — 이어지는 생명 | 부산교회 성경시리즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep:       #0d0b07;
+    --bg-parchment:  #13110c;
+    --bg-section:    #17140e;
+    --gold-bright:   #d4a84b;
+    --gold-mid:      #b8893a;
+    --gold-dim:      #7a5c28;
+    --gold-faint:    rgba(212,168,75,0.10);
+    --crimson:       #8b1a1a;
+    --crimson-bright:#b02020;
+    --dust:          #c8b89a;
+    --dust-dim:      #8a7a63;
+    --white-soft:    #ede8df;
+    --line:          rgba(212,168,75,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--dust);
+    font-family: 'Noto Serif KR', 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ── CINEMATIC HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+  }
+
+  /* Desert / well canvas */
+  #heroCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .hero-overline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.35em;
+    color: var(--gold-mid);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.4s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    font-weight: 300;
+    color: var(--gold-bright);
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.7s forwards;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--white-soft);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+    color: var(--dust-dim);
+    margin-top: 20px;
+    letter-spacing: 0.1em;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s 1s forwards;
+  }
+
+  .hero-verse {
+    max-width: 600px;
+    margin: 40px auto 0;
+    padding: 24px 32px;
+    border-left: 2px solid var(--gold-dim);
+    border-right: 2px solid var(--gold-dim);
+    color: var(--dust);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1.2s 1.3s forwards;
+  }
+  .hero-verse::before, .hero-verse::after {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold-dim);
+    margin: 0 auto 16px;
+  }
+  .hero-verse::after { margin: 16px auto 0; }
+
+  .hero-ref {
+    margin-top: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold-mid);
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-align: right;
+    padding-right: 8px;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    animation: breathe 2.5s ease-in-out infinite;
+  }
+  .scroll-cue svg { width: 18px; opacity: 0.6; }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 700px;
+    margin: 0 auto 56px;
+    padding: 0 24px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--line); }
+  .divider-mark {
+    width: 8px; height: 8px;
+    border: 1px solid var(--gold-dim);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* ── CONTENT SECTIONS ── */
+  .content {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .section {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--line);
+    opacity: 0.15;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .section:last-of-type { border-bottom: none; }
+
+  .section-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    color: var(--gold-mid);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 400;
+    color: var(--white-soft);
+    line-height: 1.3;
+    margin-bottom: 32px;
+  }
+
+  .prose {
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    line-height: 2;
+    color: var(--dust);
+  }
+  .prose + .prose { margin-top: 1.4em; }
+
+  /* Scripture pull-quote */
+  .scripture {
+    margin: 36px 0;
+    padding: 24px 28px 24px 36px;
+    border-left: 3px solid var(--crimson-bright);
+    background: rgba(139,26,26,0.07);
+    color: var(--white-soft);
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    line-height: 1.85;
+    position: relative;
+  }
+  .scripture::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--crimson);
+    position: absolute;
+    top: -10px; left: 8px;
+    line-height: 1;
+    opacity: 0.5;
+  }
+  .scripture-ref {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-mid);
+    text-align: right;
+    padding-right: 4px;
+  }
+
+  /* Highlight text */
+  .highlight {
+    color: var(--gold-bright);
+    font-weight: 500;
+  }
+
+  /* Insight box */
+  .insight {
+    margin: 40px 0;
+    padding: 28px 32px;
+    background: var(--gold-faint);
+    border: 1px solid var(--gold-dim);
+    border-radius: 1px;
+  }
+  .insight-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.35em;
+    color: var(--gold-mid);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .insight p {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--white-soft);
+  }
+
+  /* ── FLOW DIAGRAM — well scene ── */
+  .scene-well {
+    margin: 48px 0;
+    display: flex;
+    justify-content: center;
+  }
+  #wellCanvas {
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    max-width: 100%;
+  }
+
+  /* ── THREAD / CHAIN of events ── */
+  .chain {
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .chain-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-left: 1px solid var(--line);
+    padding-left: 28px;
+    position: relative;
+  }
+  .chain-item::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 26px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 2px solid var(--bg-deep);
+  }
+  .chain-item:first-child::before { background: var(--gold-bright); }
+  .chain-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    color: var(--gold-mid);
+    letter-spacing: 0.2em;
+    min-width: 28px;
+    padding-top: 2px;
+  }
+  .chain-text { font-size: 0.97rem; line-height: 1.8; color: var(--dust); }
+  .chain-text strong { color: var(--white-soft); font-weight: 500; }
+
+  /* ── CLOSING THEOLOGY ── */
+  .closing {
+    background: var(--bg-section);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 0 -28px;
+    padding: 80px 28px;
+    text-align: center;
+  }
+  .closing-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 48px auto;
+    max-width: 480px;
+  }
+  .flow-step {
+    padding: 16px 32px;
+    border: 1px solid var(--gold-dim);
+    color: var(--white-soft);
+    font-size: 0.97rem;
+    letter-spacing: 0.05em;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+  .flow-arrow {
+    color: var(--gold-mid);
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 4px 0;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .closing-finale {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    color: var(--gold-bright);
+    line-height: 1.5;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 56px 24px 48px;
+    border-top: 1px solid var(--line);
+  }
+  footer .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--gold-mid);
+    letter-spacing: 0.25em;
+    margin-bottom: 10px;
+  }
+  footer .series-note {
+    font-size: 0.82rem;
+    color: var(--dust-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-verse { padding: 18px 20px; }
+    .section { padding: 60px 0 40px; }
+    .scripture { padding: 18px 20px 18px 28px; }
+    .closing { margin: 0 -24px; padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HERO ══ -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+
+  <p class="hero-overline">창세기 24장 &nbsp;·&nbsp; 부산교회 성경시리즈</p>
+
+  <h1 class="hero-title">
+    이어지는<br><em>생명</em>
+  </h1>
+
+  <p class="hero-subtitle">이삭과 리브가 — 하나님의 경륜이 사람을 통해 흐르다</p>
+
+  <div class="hero-verse">
+    아브라함은 어느덧 늙고 나이가 많이 들게 되었다.<br>
+    여호와는 모든 일에 아브라함에게 복을 주셨다.
+    <p class="hero-ref">창세기 24:1</p>
+  </div>
+
+  <div class="scroll-cue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ CONTENT ══ -->
+<main class="content">
+
+  <!-- 1. 약속은 늙지 않는다 -->
+  <article class="section">
+    <p class="section-eyebrow">I — 계승의 시간</p>
+    <h2 class="section-heading">약속은 늙지 않는다</h2>
+
+    <p class="prose">
+      이 문장은 단순한 노년의 묘사가 아닙니다. 하나님께서 한 사람의 삶을 통해 이루어 오신 경륜의 한 단계가 담겨 있습니다. 창세기 초반에서 시작된 창조와 생명의 이야기가 이제 <span class="highlight">'계승'과 '연결'</span>의 문제로 이어지고 있습니다.
+    </p>
+
+    <p class="prose">
+      아브라함은 늙었습니다. 그러나 하나님의 약속은 늙지 않았습니다. 오히려 이제 그 약속은 다음 세대로 넘어가야 할 시점에 이르렀습니다.
+    </p>
+
+    <div class="scripture">
+      너의 손을 나의 넓적다리 밑에 넣어라… 너는 내 아들을 위하여 아내를 데려와야 한다.
+      <span class="scripture-ref">창세기 24:2, 4</span>
+    </div>
+
+    <p class="prose">
+      이 장면은 매우 엄숙합니다. 단순히 결혼을 위한 부탁이 아니라, <span class="highlight">하나님의 언약이 이어질 통로를 준비하는 일</span>이기 때문입니다.
+    </p>
+
+    <div class="insight">
+      <p class="insight-label">핵심 원리</p>
+      <p>하나님은 아무렇게나 생명을 이어가시지 않으십니다. 선택을 통해, 뜻을 통해, 그분의 경륜 안에서 사람을 연결하십니다.</p>
+    </div>
+  </article>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+  <!-- 2. 우물가의 기도 -->
+  <article class="section">
+    <p class="section-eyebrow">II — 기도와 응답</p>
+    <h2 class="section-heading">기도가 끝나기도 전에</h2>
+
+    <p class="prose">
+      종은 현실적인 질문을 던집니다. "그 여인이 따라오지 않으면 어떻게 합니까?" 이것은 인간의 한계를 드러냅니다. 그러나 아브라함의 대답은 전혀 다른 차원에 있습니다.
+    </p>
+
+    <div class="scripture">
+      여호와께서 그분의 천사를 너의 앞에 보내시어…
+      <span class="scripture-ref">창세기 24:7</span>
+    </div>
+
+    <p class="prose">
+      여기서 하나님의 일하심의 원리가 드러납니다. <span class="highlight">사람은 길을 가지만, 하나님은 그 길 앞에서 이미 준비하고 계십니다.</span> 사람은 선택하는 것 같지만, 하나님은 이미 선택을 이루어 놓으십니다.
+    </p>
+
+    <!-- Well animation canvas -->
+    <div class="scene-well">
+      <canvas id="wellCanvas" width="560" height="260"></canvas>
+    </div>
+
+    <p class="prose">
+      종은 우물가에서 기도합니다. 그 기도는 하나님의 성품을 기준으로 한 분별이었습니다.
+    </p>
+
+    <div class="scripture">
+      제가 그중 한 처녀에게 '물 좀 마시게 하여 주시오'라고 할 때, '낙타들에게도 물을 주겠습니다'라고 말하는 바로 그 처녀…
+      <span class="scripture-ref">창세기 24:14</span>
+    </div>
+
+    <p class="prose">
+      물 한 잔을 넘어, 낙타들까지 돌보는 마음. 그것은 <span class="highlight">생명을 섬기는 성품</span>입니다. 하나님이 택하시는 사람은 외적인 조건이 아니라, 생명을 향한 태도를 가진 사람입니다.
+    </p>
+
+    <div class="insight">
+      <p class="insight-label">응답의 순간</p>
+      <p>그가 기도를 끝내기도 전에… 리브가가 나왔다. 하나님의 응답은 기다림의 끝이 아니라, 기도와 동시에 이미 시작되어 있었습니다.</p>
+    </div>
+  </article>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+  <!-- 3. 침묵과 분별 -->
+  <article class="section">
+    <p class="section-eyebrow">III — 분별의 시간</p>
+    <h2 class="section-heading">말없이 지켜보다</h2>
+
+    <p class="prose">
+      리브가는 물을 길어 주고, 낙타들에게까지 물을 먹입니다. 이 장면은 단순한 친절이 아닙니다. 수고를 감수하는 사랑, 생명을 돌보는 섬김.
+    </p>
+
+    <p class="prose">
+      종은 그 모습을 보며 <span class="highlight">"말없이 지켜보고 있었다"</span>고 기록되어 있습니다. 이 침묵은 분별의 시간입니다. 하나님의 뜻은 성급함 속에서가 아니라, 지켜봄 속에서 분명해집니다.
+    </p>
+
+    <p class="prose">
+      확신이 생기자, 그는 경배합니다.
+    </p>
+
+    <div class="scripture">
+      여호와는 저를 인도하시어… 주인의 형제의 집에 이르게 하셨습니다.
+      <span class="scripture-ref">창세기 24:27</span>
+    </div>
+
+    <div class="chain">
+      <div class="chain-item">
+        <span class="chain-num">→</span>
+        <div class="chain-text"><strong>길</strong>이 <strong>만남</strong>으로 이어지고</div>
+      </div>
+      <div class="chain-item">
+        <span class="chain-num">→</span>
+        <div class="chain-text"><strong>기도</strong>가 <strong>현실</strong>로 나타나며</div>
+      </div>
+      <div class="chain-item">
+        <span class="chain-num">→</span>
+        <div class="chain-text"><strong>하나님의 보이지 않는 인도</strong>가 <strong>눈에 보이는 결과</strong>로 드러납니다</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+  <!-- 4. 여호와에게서 나온 일 -->
+  <article class="section">
+    <p class="section-eyebrow">IV — 증언과 주권</p>
+    <h2 class="section-heading">여호와에게서 나온 일</h2>
+
+    <p class="prose">
+      종은 리브가의 가족 앞에서 모든 과정을 다시 이야기합니다. 같은 이야기가 반복되지만, 이것은 단순한 반복이 아닙니다. <span class="highlight">하나님의 일은 증언을 통해 확증됩니다.</span> 하나님께서 하신 일은 숨겨지지 않고 드러나며, 사람들 앞에서 인정받게 됩니다.
+    </p>
+
+    <div class="scripture">
+      이 일은 여호와에게서 나온 일이니…
+      <span class="scripture-ref">창세기 24:50</span>
+    </div>
+
+    <p class="prose">
+      사람의 판단이 멈추고, 하나님의 주권이 인정되는 순간입니다. 라반과 브두엘의 이 한 마디는 오랜 설명 끝에 내려진 결론입니다. 모든 세세한 과정이 하나로 수렴되어 <span class="highlight">하나님의 손길을 증언</span>하게 된 것입니다.
+    </p>
+
+    <div class="insight">
+      <p class="insight-label">하나님의 방법</p>
+      <p>하나님은 강제로 이루지 않으십니다. 선택된 사람의 자발적인 응답을 통해 이루십니다. 마지막 결정권은 언제나 한 사람의 응답에 달려 있습니다.</p>
+    </div>
+  </article>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+  <!-- 5. 가겠습니다 -->
+  <article class="section">
+    <p class="section-eyebrow">V — 믿음의 선택</p>
+    <h2 class="section-heading">"가겠습니다"</h2>
+
+    <p class="prose">
+      모든 준비가 끝났지만, 마지막 선택은 한 사람의 응답에 달려 있습니다.
+    </p>
+
+    <div class="scripture">
+      이 사람과 같이 가겠느냐?
+      <span class="scripture-ref">창세기 24:58</span>
+    </div>
+
+    <p class="prose">
+      리브가는 말합니다. <span class="highlight">"가겠습니다."</span>
+    </p>
+
+    <p class="prose">
+      이 한 마디는 단순한 결심이 아닙니다. 보이지 않는 약속을 향해 떠나는 믿음의 선언입니다. 그녀는 아직 이삭을 보지 못했습니다. 그러나 하나님의 인도를 따라 미지의 길을 선택합니다.
+    </p>
+
+    <p class="prose">
+      그리고 이야기는 마지막 장면으로 나아갑니다.
+    </p>
+
+    <div class="scripture">
+      저녁 무렵 이삭이 묵상을 하려고 들에 나갔다가…
+      <span class="scripture-ref">창세기 24:63</span>
+    </div>
+
+    <p class="prose">
+      이삭은 기다리는 사람입니다. 무엇을 이루기보다, <span class="highlight">하나님 앞에 머무는 사람</span>입니다. 그리고 바로 그 순간, 낙타들이 다가옵니다. 들판 저편에서, 묵상의 고요함 속으로, 하나님이 준비하신 만남이 걸어왔습니다.
+    </p>
+
+    <div class="insight">
+      <p class="insight-label">사랑의 기원</p>
+      <p>이 결혼은 감정에서 시작되지 않았습니다. 하나님의 인도, 선택, 순종, 그리고 만남을 통해 '사랑'이 결과로 나타났습니다. — "이삭은 리브가를 사랑하였다."</p>
+    </div>
+  </article>
+
+</main>
+
+<!-- ═══════════════════════════════════════════ CLOSING THEOLOGY ══ -->
+<section class="content">
+  <div class="closing section">
+    <p class="section-eyebrow" style="text-align:center;">경륜의 흐름</p>
+    <h2 class="section-heading" style="text-align:center;">창조에서 연합까지</h2>
+
+    <div class="closing-flow">
+      <div class="flow-step">창조 — 하나님이 생명을 심으시다</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">선택 — 구별된 계보를 통해 흐르다</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">순종 — 사람의 응답으로 이어지다</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">연합 — 이삭과 리브가, 하나가 되다</div>
+    </div>
+
+    <p class="closing-finale">
+      하나님은 단순히 한 사람을 축복하시는 분이 아니라,<br>
+      생명을 이어가시고, 사람들을 연결하시며,<br>
+      결국 <em style="color:var(--white-soft);font-style:normal;">연합된 생명 공동체</em>를 이루시는 분이십니다.
+    </p>
+
+    <p class="prose" style="margin-top:40px;text-align:center;color:var(--dust-dim);font-size:0.95rem;">
+      이삭과 리브가의 만남은 한 가정의 시작이 아니라,<br>
+      하나님께서 이루고자 하시는 더 큰 이야기—<br>
+      그분의 생명이 사람 안에서 이어지고,<br>
+      서로 연결되어, 하나의 흐름을 이루는 그 이야기의 한 장면입니다.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ FOOTER ══ -->
+<footer>
+  <p class="logo">부산교회 성경시리즈</p>
+  <p class="series-note">창세기 24장 &nbsp;·&nbsp; Genesis Series &nbsp;·&nbsp; Busan Church</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════ SCRIPTS ══ -->
+<script>
+// ── Hero canvas — desert dusk with stars and a distant well silhouette ──
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [], camels = [];
+  let t = 0;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    initStars();
+  }
+
+  function initStars() {
+    stars = [];
+    const count = Math.floor((W * H) / 3000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H * 0.65,
+        r: Math.random() * 1.2 + 0.2,
+        a: Math.random(),
+        speed: Math.random() * 0.008 + 0.003,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+    // Camel silhouette data (simplified path points, relative)
+    camels = [
+      { x: W * 0.15, scl: 0.55, flip: false },
+      { x: W * 0.78, scl: 0.42, flip: true }
+    ];
+  }
+
+  function drawHorizon() {
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0, 0, 0, H * 0.72);
+    sky.addColorStop(0,   '#07050f');
+    sky.addColorStop(0.5, '#0f0b18');
+    sky.addColorStop(1,   '#1a1008');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H * 0.72);
+
+    // Dune ground
+    const grd = ctx.createLinearGradient(0, H * 0.68, 0, H);
+    grd.addColorStop(0, '#1c1308');
+    grd.addColorStop(1, '#0d0b07');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.73);
+    // gentle dune curve
+    ctx.bezierCurveTo(W * 0.25, H * 0.65, W * 0.5, H * 0.78, W * 0.75, H * 0.67);
+    ctx.bezierCurveTo(W * 0.88, H * 0.62, W * 0.95, H * 0.7, W, H * 0.72);
+    ctx.lineTo(W, H); ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawMoon() {
+    const mx = W * 0.82, my = H * 0.18;
+    // Glow
+    const glow = ctx.createRadialGradient(mx, my, 0, mx, my, 80);
+    glow.addColorStop(0,   'rgba(212,168,75,0.12)');
+    glow.addColorStop(0.5, 'rgba(212,168,75,0.04)');
+    glow.addColorStop(1,   'transparent');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(mx, my, 80, 0, Math.PI * 2);
+    ctx.fill();
+    // Moon disc
+    ctx.fillStyle = '#c8a84a';
+    ctx.beginPath();
+    ctx.arc(mx, my, 22, 0, Math.PI * 2);
+    ctx.fill();
+    // Crescent mask
+    ctx.fillStyle = '#0d0a14';
+    ctx.beginPath();
+    ctx.arc(mx + 8, my - 3, 18, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawStars() {
+    stars.forEach(s => {
+      const alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.phase));
+      ctx.globalAlpha = alpha * s.a;
+      ctx.fillStyle = '#ede8df';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function drawWell(cx, groundY) {
+    const s = 0.5;
+    ctx.save();
+    ctx.translate(cx, groundY);
+    ctx.scale(s, s);
+    ctx.strokeStyle = '#5a4020';
+    ctx.lineWidth = 3;
+    // Well base (circle)
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 30, 10, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = '#7a5c28';
+    ctx.stroke();
+    // Well walls
+    ctx.fillStyle = '#2a1e0e';
+    ctx.fillRect(-30, -40, 60, 40);
+    ctx.strokeRect(-30, -40, 60, 40);
+    // Crossbar
+    ctx.beginPath();
+    ctx.moveTo(-40, -60); ctx.lineTo(40, -60);
+    ctx.lineWidth = 4; ctx.strokeStyle = '#6b4e25';
+    ctx.stroke();
+    // Poles
+    ctx.beginPath();
+    ctx.moveTo(-40, -40); ctx.lineTo(-40, -60);
+    ctx.moveTo(40, -40); ctx.lineTo(40, -60);
+    ctx.lineWidth = 3; ctx.stroke();
+    // Rope
+    ctx.beginPath();
+    ctx.moveTo(0, -60); ctx.lineTo(0, -20);
+    ctx.lineWidth = 1.5; ctx.strokeStyle = '#b8893a';
+    ctx.stroke();
+    // Bucket
+    ctx.fillStyle = '#3d2a12';
+    ctx.fillRect(-8, -28, 16, 12);
+    ctx.restore();
+  }
+
+  function drawCamelSilhouette(cx, groundY, scale, flip) {
+    ctx.save();
+    ctx.translate(cx, groundY);
+    ctx.scale(flip ? -scale : scale, scale);
+    ctx.fillStyle = '#1a1008';
+
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(0, -30, 40, 22, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Hump
+    ctx.beginPath();
+    ctx.ellipse(10, -54, 16, 18, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    // Neck
+    ctx.beginPath();
+    ctx.moveTo(-20, -40); ctx.quadraticCurveTo(-38, -60, -30, -78);
+    ctx.quadraticCurveTo(-26, -82, -20, -68);
+    ctx.quadraticCurveTo(-28, -54, -12, -38);
+    ctx.fill();
+    // Head
+    ctx.beginPath();
+    ctx.ellipse(-30, -82, 14, 9, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Legs
+    [[-28,-8],[-10,-8],[10,-8],[28,-8]].forEach(([lx, ly]) => {
+      ctx.beginPath();
+      const legH = 30 + Math.sin(t * 0.8 + lx * 0.15) * 4;
+      ctx.rect(lx - 4, ly, 8, legH);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function draw(timestamp) {
+    t = timestamp / 1000;
+    ctx.clearRect(0, 0, W, H);
+    drawHorizon();
+    drawMoon();
+    drawStars();
+
+    // Ground level at about 70% height
+    const groundY = H * 0.7;
+    drawWell(W * 0.5, groundY - 10);
+
+    camels.forEach(c => {
+      drawCamelSilhouette(c.x, groundY, c.scl, c.flip);
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+
+// ── Well scene canvas — water ripples ──
+(function() {
+  const canvas = document.getElementById('wellCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0, ripples = [];
+
+  function addRipple() {
+    ripples.push({ x: W * 0.35 + (Math.random() - 0.5) * 20, y: H * 0.55, r: 4, maxR: 60 + Math.random() * 20, a: 0.7 });
+  }
+
+  function drawScene() {
+    // Background
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#13110c');
+    bg.addColorStop(1, '#0d0b07');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    // Desert ground
+    ctx.fillStyle = '#1c1308';
+    ctx.beginPath();
+    ctx.rect(0, H * 0.58, W, H * 0.42);
+    ctx.fill();
+
+    // Well
+    ctx.save();
+    ctx.translate(W * 0.35, H * 0.55);
+    // Stone rim
+    ctx.strokeStyle = '#7a5c28'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 38, 14, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#1a1208'; ctx.fill();
+    // Water surface inside
+    ctx.fillStyle = `rgba(30,50,80,${0.6 + 0.1 * Math.sin(t)})`;
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 30, 10, 0, 0, Math.PI * 2); ctx.fill();
+    // Ripples
+    ripples.forEach(rp => {
+      ctx.save();
+      ctx.scale(1, 10/30);
+      ctx.strokeStyle = `rgba(100,160,210,${rp.a})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(0, rp.y * 3, rp.r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    });
+    // Walls
+    ctx.fillStyle = '#2a1e0e';
+    ctx.strokeStyle = '#5a4020'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-38, 0); ctx.lineTo(-38, -40);
+    ctx.lineTo(38, -40); ctx.lineTo(38, 0);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+
+    // Figure of Rebekah (simple silhouette)
+    ctx.save();
+    ctx.translate(W * 0.35 + 60, H * 0.45);
+    ctx.fillStyle = '#2a1e0e';
+    // Body / robe
+    ctx.beginPath();
+    ctx.moveTo(-10, 0); ctx.lineTo(-14, 50); ctx.lineTo(14, 50); ctx.lineTo(10, 0);
+    ctx.ellipse(0, -12, 9, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Head veil
+    ctx.beginPath();
+    ctx.ellipse(0, -28, 8, 8, 0, 0, Math.PI * 2); ctx.fill();
+    // Water jar (on shoulder)
+    ctx.save();
+    ctx.translate(14, -8);
+    ctx.fillStyle = '#6b4e25';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 6, 12, 0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.restore();
+
+    // Label
+    ctx.fillStyle = 'rgba(212,168,75,0.55)';
+    ctx.font = '500 13px "Noto Serif KR", serif';
+    ctx.fillText('리브가가 물을 길어 낙타들에게까지 먹이다', W * 0.08, H * 0.92);
+  }
+
+  function animate(timestamp) {
+    t = timestamp / 1000;
+    ripples.forEach(rp => {
+      rp.r += 0.6;
+      rp.a -= 0.008;
+    });
+    ripples = ripples.filter(rp => rp.a > 0);
+    if (Math.random() < 0.025) addRipple();
+    drawScene();
+    requestAnimationFrame(animate);
+  }
+
+  addRipple();
+  requestAnimationFrame(animate);
+})();
+
+// ── Scroll reveal ──
+(function() {
+  const sections = document.querySelectorAll('.section');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  sections.forEach(s => io.observe(s));
+
+  // Safety fallback
+  setTimeout(() => {
+    sections.forEach(s => s.classList.add('visible'));
+  }, 2200);
+})();
+</script>
+</body>
+</html>
