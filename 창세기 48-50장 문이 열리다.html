@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창세기 48–50장 · 문이 열리다</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --night: #0b0f1a;
+    --deep: #111827;
+    --ink: #1c2436;
+    --steel: #2d3a52;
+    --mist: #8a9bb5;
+    --silver: #c4cdd8;
+    --dawn: #e8d9b8;
+    --gold: #c9a84c;
+    --gold-bright: #e6c96a;
+    --ember: #b5723a;
+    --sand: #d4b483;
+    --white: #f5f0e8;
+    --text-main: #f0ece3;
+    --text-dim: #9aabb8;
+    --text-quote: #dfc98a;
+    --accent: #c9a84c;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--night);
+    color: var(--text-main);
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ── STARFIELD HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #starCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .series-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.5s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.8s forwards;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--gold-bright);
+    font-weight: 300;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 300;
+    color: var(--dawn);
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1.2s 1.1s forwards;
+  }
+
+  .hero-ref {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--mist);
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeUp 1.2s 1.4s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1.2s 2s forwards;
+  }
+
+  .scroll-hint span {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--mist);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── HORIZON DIVIDER ── */
+  .horizon {
+    position: relative;
+    height: 2px;
+    margin: 0;
+    overflow: visible;
+  }
+
+  .horizon::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold) 20%, var(--gold-bright) 50%, var(--gold) 80%, transparent);
+  }
+
+  .horizon-glyph {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    background: var(--night);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .horizon-glyph svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .section {
+    padding: 6rem 0 4rem;
+  }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section-label.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    max-width: 120px;
+  }
+
+  /* ── SCRIPTURE QUOTE ── */
+  .scripture {
+    position: relative;
+    margin: 3rem 0;
+    padding: 2rem 2.5rem;
+    border-left: 2px solid var(--gold);
+    background: rgba(201, 168, 76, 0.04);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .scripture.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scripture-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-weight: 400;
+    color: var(--text-quote);
+    line-height: 1.65;
+    font-style: normal;
+  }
+
+  .scripture-ref {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--mist);
+  }
+
+  /* ── BODY TEXT ── */
+  .body-text {
+    font-size: clamp(1rem, 1.8vw, 1.1rem);
+    color: var(--text-main);
+    line-height: 1.95;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .body-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── PROPHECY BLOCK ── */
+  .prophecy-grid {
+    display: grid;
+    gap: 1px;
+    background: rgba(201, 168, 76, 0.15);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    margin: 3rem 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .prophecy-grid.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .prophecy-item {
+    background: var(--night);
+    padding: 1.75rem 2rem;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.5rem;
+    align-start: start;
+  }
+
+  .prophecy-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    padding-top: 0.1rem;
+  }
+
+  .prophecy-text {
+    font-size: 0.95rem;
+    color: var(--silver);
+    line-height: 1.8;
+  }
+
+  .prophecy-highlight {
+    margin-top: 0.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--text-quote);
+    font-style: normal;
+  }
+
+  /* ── CLIMAX SECTION — JUDAH ── */
+  .judah-block {
+    position: relative;
+    padding: 4rem 2.5rem;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    margin: 3rem 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .judah-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .judah-block::before {
+    content: '✦';
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    font-size: 0.8rem;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+
+  .judah-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--gold-bright);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .judah-text {
+    font-size: clamp(1rem, 1.8vw, 1.1rem);
+    color: var(--dawn);
+    line-height: 1.95;
+  }
+
+  /* ── KEY VERSE LARGE ── */
+  .key-verse {
+    padding: 5rem 0;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .key-verse.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .key-verse-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.5;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .key-verse-text em {
+    display: block;
+    color: var(--gold-bright);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.15em;
+    margin: 0.5rem 0;
+  }
+
+  .key-verse-ref {
+    display: block;
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    color: var(--mist);
+  }
+
+  /* ── DAWN HORIZON — TRANSITION TO EXODUS ── */
+  #dawn-section {
+    position: relative;
+    padding: 6rem 0 0;
+    overflow: hidden;
+  }
+
+  #dawnCanvas {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+    margin-bottom: 0;
+  }
+
+  .dawn-text-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 4rem 2rem 5rem;
+    background: linear-gradient(to bottom, transparent, var(--night) 30%);
+    margin-top: -4rem;
+  }
+
+  .dawn-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .dawn-sub {
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    color: var(--silver);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.85;
+  }
+
+  /* ── CLOSING CHAIN ── */
+  .chain {
+    padding: 4rem 0 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .chain.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chain-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .chain-flow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+  }
+
+  .chain-node {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+    color: var(--dawn);
+    padding: 0.5rem 1rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .chain-arrow {
+    color: var(--gold);
+    font-size: 0.9rem;
+    opacity: 0.6;
+    padding: 0 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .chain-final {
+    width: 100%;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    color: var(--gold-bright);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    border-top: 1px solid rgba(201, 168, 76, 0.2);
+    padding: 2.5rem 0;
+    text-align: center;
+  }
+
+  .footer-church {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    color: var(--mist);
+  }
+
+  .footer-series {
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: rgba(138, 155, 181, 0.5);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .page-container { padding: 0 1.25rem; }
+    .prophecy-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .chain-flow { gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HERO — STARFIELD NIGHT
+     ═══════════════════════════════════════ -->
+<section id="hero">
+  <canvas id="starCanvas"></canvas>
+  <div class="hero-content">
+    <p class="series-eyebrow">창세기 시리즈 · Genesis Series</p>
+    <h1 class="hero-title">
+      문이<br><span>열리다</span>
+    </h1>
+    <p class="hero-subtitle">야곱의 마지막과 요셉의 고백</p>
+    <p class="hero-ref">창세기 48장 — 50장 &nbsp;·&nbsp; Genesis 48–50</p>
+  </div>
+  <div class="scroll-hint">
+    <span>아래로</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="horizon">
+  <div class="horizon-glyph">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="3" fill="#c9a84c"/>
+      <line x1="8" y1="0" x2="8" y2="4" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+      <line x1="8" y1="12" x2="8" y2="16" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+      <line x1="0" y1="8" x2="4" y2="8" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+      <line x1="12" y1="8" x2="16" y2="8" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SECTION 1 — 침상의 종소리
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <section class="section">
+    <p class="section-label">침상의 종소리 · 창세기 48장</p>
+
+    <blockquote class="scripture">
+      <p class="scripture-text">"이런 일들이 있은 뒤, 요셉은 아버지가 아프다는 소식을 들었다."</p>
+      <span class="scripture-ref">창세기 48:1</span>
+    </blockquote>
+
+    <p class="body-text">
+      이 한 구절은 단순한 병상의 소식이 아닙니다. 한 시대가 마무리되고 하나님의 경륜이 다음 단계로 넘어가는 순간을 알리는 조용한 종소리와 같습니다. 인간의 시간으로는 '죽음이 다가오는 때'이지만, 하나님의 시간에서는 '약속이 다음 세대로 전달되는 때'입니다.
+    </p>
+
+    <p class="body-text">
+      야곱은 침상에서 일어나 앉습니다. 육체는 쇠약하지만, 그의 영은 가장 또렷한 순간에 도달해 있습니다. 그는 과거를 회상합니다.
+    </p>
+
+    <blockquote class="scripture">
+      <p class="scripture-text">"모든 것을 충족해 주시는 하나님께서… 나에게 나타나시어 복을 주시며…"</p>
+      <span class="scripture-ref">창세기 48:3</span>
+    </blockquote>
+
+    <p class="body-text">
+      야곱은 자신의 인생을 '하나님이 나타나신 이야기'로 해석합니다. 방황과 속임과 도망의 삶이었지만, 하나님은 그 모든 과정을 통해 한 사람을 다듬어 오셨습니다. 이것이 성숙입니다. 창조된 인간이 하나님의 손길을 깨닫고, 그분의 인도하심을 인정하는 자리까지 이르는 것입니다.
+    </p>
+  </section>
+</div>
+
+<div class="horizon">
+  <div class="horizon-glyph">
+    <svg viewBox="0 0 16 16" fill="none">
+      <path d="M3 8 L8 3 L13 8 L8 13 Z" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.6"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SECTION — 교차된 손의 축복
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <blockquote class="scripture">
+    <p class="scripture-text">"이스라엘은 통찰력 있게 그의 손을 얹었다."</p>
+    <span class="scripture-ref">창세기 48:14</span>
+  </blockquote>
+
+  <p class="body-text">
+    인간의 질서에서는 장자가 우선입니다. 그러나 하나님은 종종 그 질서를 뒤집으십니다. 에브라임이 므낫세보다 앞세워집니다. 요셉은 이를 바로잡으려 하지만, 야곱은 말합니다.
+  </p>
+
+  <blockquote class="scripture">
+    <p class="scripture-text">"나도 안다… 그러나 그의 동생이 그보다 더 크게 될 것이다."</p>
+    <span class="scripture-ref">창세기 48:19</span>
+  </blockquote>
+
+  <p class="body-text">
+    하나님의 경륜이 인간의 논리를 넘어선다는 사실이 여기서 드러납니다. 하나님은 '강한 자'가 아니라 '택하신 자'를 통해 일하십니다. 아벨과 가인, 이삭과 이스마엘, 야곱과 에서의 흐름과 동일합니다. 선택은 인간의 자격이 아니라 하나님의 뜻에서 나옵니다.
+  </p>
+
+  <blockquote class="scripture">
+    <p class="scripture-text">"오늘까지 일생 동안 저를 목양하신 하나님… 온갖 악에서 저를 구속하신 분…"</p>
+    <span class="scripture-ref">창세기 48:15–16</span>
+  </blockquote>
+</div>
+
+<div class="horizon">
+  <div class="horizon-glyph">
+    <svg viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="2.5" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.7"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SECTION 2 — 열두 아들 예언
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <section class="section">
+    <p class="section-label">열두 지파의 예언 · 창세기 49장</p>
+
+    <p class="body-text">
+      49장으로 넘어가면, 야곱은 열두 아들을 불러 마지막 말을 전합니다.
+    </p>
+
+    <blockquote class="scripture">
+      <p class="scripture-text">"마지막 날들에 너희에게 일어날 일을 내가 말해 주겠다."</p>
+      <span class="scripture-ref">창세기 49:1</span>
+    </blockquote>
+
+    <p class="body-text">
+      이것은 단순한 유언이 아니라 예언입니다. 하나님께서 한 사람의 입을 통해 한 민족의 미래를 말씀하시는 순간입니다. 인간의 행위는 하나님의 경륜 안에서 평가됩니다.
+    </p>
+
+    <div class="prophecy-grid">
+      <div class="prophecy-item">
+        <div class="prophecy-name">르우벤</div>
+        <div>
+          <p class="prophecy-text">장자이지만 물의 끓어오름 같이 방자하여 으뜸이 되지 못함</p>
+          <p class="prophecy-highlight">"너는 으뜸이 되지 못하리니…" (49:4)</p>
+        </div>
+      </div>
+      <div class="prophecy-item">
+        <div class="prophecy-name">레위</div>
+        <div>
+          <p class="prophecy-text">폭력으로 인해 흩어지게 될 것임 — 그러나 훗날 하나님의 제사장 지파가 됨</p>
+          <p class="prophecy-highlight">"그들을 흩어 놓을 것이다" (49:7)</p>
+        </div>
+      </div>
+      <div class="prophecy-item">
+        <div class="prophecy-name">요셉</div>
+        <div>
+          <p class="prophecy-text">열매 많은 가지, 이집트의 고난에도 꺾이지 않고 오히려 넘치는 생명</p>
+          <p class="prophecy-highlight">"그의 가지들이 담을 넘는다" (49:22)</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JUDAH — CLIMAX
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <div class="judah-block">
+    <h2 class="judah-title">유다 — 경륜의 절정</h2>
+    <p class="judah-text">
+      흐름은 유다에게서 절정으로 향합니다. 창조 → 사람 → 선택 → 이제 '왕'과 '통치'로 이어집니다. 하나님은 단순히 사람을 구원하시는 것이 아니라, 그들 가운데 왕을 세우시고 통치의 질서를 이루려 하십니다.
+    </p>
+  </div>
+
+  <blockquote class="scripture">
+    <p class="scripture-text">"왕의 지휘봉이 유다에게서 떠나지 않으며… 실로께서 오실 때까지…"</p>
+    <span class="scripture-ref">창세기 49:10</span>
+  </blockquote>
+
+  <p class="body-text">
+    그 왕은 단지 한 지파의 왕이 아니라, "백성들이 그분께 순종할 것이다"라는 표현처럼 모든 민족을 향한 왕입니다. 이것은 장차 오실 그리스도를 가리키는 그림입니다.
+  </p>
+</div>
+
+<div class="horizon">
+  <div class="horizon-glyph">
+    <svg viewBox="0 0 16 16" fill="none">
+      <path d="M2 8 L8 2 L14 8" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     KEY VERSE — 50:20
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <div class="key-verse">
+    <p class="key-verse-text">
+      "형님들은 나에게 악한 일을 하려고 하였지만,<br>
+      <em>하나님은 그것으로 선을 이루셨습니다.</em>"
+    </p>
+    <span class="key-verse-ref">창세기 50:20</span>
+  </div>
+
+  <p class="body-text">
+    이 한 구절 안에 하나님의 경륜이 담겨 있습니다. 인간의 악조차도 하나님의 계획을 무너뜨릴 수 없습니다. 오히려 그것까지 사용하셔서 생명을 보존하십니다. 이것이 하나님이 일하시는 방식입니다.
+  </p>
+
+  <blockquote class="scripture">
+    <p class="scripture-text">"하나님은 반드시 여러분을 찾아오실 것입니다."</p>
+    <span class="scripture-ref">창세기 50:24</span>
+  </blockquote>
+
+  <p class="body-text">
+    이것은 미래를 향한 확신입니다. 하나님은 잊지 않으십니다. 약속은 반드시 이루어집니다. 그래서 그는 자신의 뼈를 가나안으로 가져가라고 말합니다. 그의 소망은 이집트가 아니라 약속의 땅에 있습니다.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════
+     DAWN — TRANSITION TO EXODUS
+     ═══════════════════════════════════════ -->
+<section id="dawn-section">
+  <canvas id="dawnCanvas"></canvas>
+  <div class="dawn-text-overlay page-container">
+    <h2 class="dawn-title">문이 열린다</h2>
+    <p class="dawn-sub">
+      야곱의 죽음과 요셉의 마지막 고백은 끝이 아닙니다.<br>
+      하나님의 경륜이 다음 장으로 넘어가는 문입니다.<br>
+      그 문 너머에서 출애굽의 새벽이 시작됩니다.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CLOSING CHAIN
+     ═══════════════════════════════════════ -->
+<div class="page-container">
+  <div class="chain">
+    <p class="chain-title">하나님의 경륜 · The Divine Thread</p>
+    <div class="chain-flow">
+      <span class="chain-node">창조</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">사람</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">선택</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">연합</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">전달</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">통치</span>
+    </div>
+    <p class="chain-final">그 중심에는 언제나 하나님 자신이 계십니다</p>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <div class="page-container">
+    <p class="footer-church">부산교회</p>
+    <p class="footer-series">창세기 성경 시리즈 · Genesis Bible Series · 48–50장</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════ -->
+<script>
+/* ── STAR CANVAS ── */
+(function() {
+  const canvas = document.getElementById('starCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let W, H, stars, meteors = [], lastMeteor = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    init();
+  }
+
+  function init() {
+    stars = Array.from({ length: 220 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      alpha: Math.random() * 0.7 + 0.2,
+      speed: Math.random() * 0.005 + 0.001,
+      phase: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function spawnMeteor() {
+    const startX = Math.random() * W * 0.7 + W * 0.1;
+    const startY = Math.random() * H * 0.3;
+    meteors.push({
+      x: startX, y: startY,
+      vx: (Math.random() * 4 + 3),
+      vy: (Math.random() * 2 + 1.5),
+      len: Math.random() * 80 + 60,
+      alpha: 1,
+      life: 0, maxLife: 60
+    });
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Deep night gradient
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#050810');
+    bg.addColorStop(0.6, '#0b0f1a');
+    bg.addColorStop(1, '#111827');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Stars
+    stars.forEach(s => {
+      const pulse = s.alpha + Math.sin(t * s.speed + s.phase) * 0.15;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,215,240,${Math.max(0.05, pulse)})`;
+      ctx.fill();
+    });
+
+    // Occasional brighter star clusters
+    [
+      { x: W * 0.2, y: H * 0.25, stars: 5 },
+      { x: W * 0.75, y: H * 0.15, stars: 4 },
+      { x: W * 0.5, y: H * 0.35, stars: 3 }
+    ].forEach(cluster => {
+      for (let i = 0; i < cluster.stars; i++) {
+        const cx = cluster.x + (Math.random() - 0.5) * 60;
+        const cy = cluster.y + (Math.random() - 0.5) * 40;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220,230,255,${0.6 + Math.sin(t * 0.002 + i) * 0.2})`;
+        ctx.fill();
+      }
+    });
+
+    // Meteors
+    if (t - lastMeteor > 4000 && Math.random() < 0.008) {
+      spawnMeteor();
+      lastMeteor = t;
+    }
+
+    meteors = meteors.filter(m => m.life < m.maxLife);
+    meteors.forEach(m => {
+      m.life++;
+      const progress = m.life / m.maxLife;
+      const a = progress < 0.3 ? progress / 0.3 : 1 - (progress - 0.3) / 0.7;
+      const grad = ctx.createLinearGradient(
+        m.x, m.y, m.x - m.vx * (m.len / 5), m.y - m.vy * (m.len / 5)
+      );
+      grad.addColorStop(0, `rgba(230,210,140,${a * 0.9})`);
+      grad.addColorStop(1, 'rgba(230,210,140,0)');
+      ctx.beginPath();
+      ctx.moveTo(m.x, m.y);
+      ctx.lineTo(m.x - m.vx * (m.len / 5), m.y - m.vy * (m.len / 5));
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      m.x += m.vx * 0.8;
+      m.y += m.vy * 0.8;
+    });
+
+    // Bottom fade
+    const fade = ctx.createLinearGradient(0, H * 0.65, 0, H);
+    fade.addColorStop(0, 'rgba(11,15,26,0)');
+    fade.addColorStop(1, 'rgba(11,15,26,1)');
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, H * 0.65, W, H * 0.35);
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(draw);
+})();
+
+/* ── DAWN CANVAS ── */
+(function() {
+  const canvas = document.getElementById('dawnCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = 320;
+    canvas.height = H;
+  }
+
+  function draw() {
+    t++;
+    ctx.clearRect(0, 0, W, H);
+
+    // Sky gradient — pre-dawn
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#050810');
+    sky.addColorStop(0.4, '#111827');
+    sky.addColorStop(0.7, '#1c2a3f');
+    sky.addColorStop(0.85, '#2d3a20');
+    sky.addColorStop(0.92, '#6b4e1a');
+    sky.addColorStop(1, '#c9873a');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // Horizon glow pulse
+    const pulse = 0.6 + Math.sin(t * 0.02) * 0.15;
+    const horizonGlow = ctx.createRadialGradient(W / 2, H, 0, W / 2, H, W * 0.8);
+    horizonGlow.addColorStop(0, `rgba(201,135,58,${pulse * 0.7})`);
+    horizonGlow.addColorStop(0.3, `rgba(180,100,30,${pulse * 0.3})`);
+    horizonGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = horizonGlow;
+    ctx.fillRect(0, 0, W, H);
+
+    // Desert silhouette
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    // Low rolling dunes
+    const pts = [
+      [0, H * 0.82], [W * 0.08, H * 0.78], [W * 0.18, H * 0.82],
+      [W * 0.28, H * 0.74], [W * 0.38, H * 0.80], [W * 0.5, H * 0.72],
+      [W * 0.62, H * 0.78], [W * 0.73, H * 0.71], [W * 0.85, H * 0.76],
+      [W * 0.93, H * 0.80], [W, H * 0.77], [W, H]
+    ];
+    ctx.moveTo(0, H);
+    ctx.lineTo(0, H * 0.82);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const mx = (pts[i][0] + pts[i + 1][0]) / 2;
+      const my = (pts[i][1] + pts[i + 1][1]) / 2;
+      ctx.quadraticCurveTo(pts[i][0], pts[i][1], mx, my);
+    }
+    ctx.lineTo(W, H);
+    ctx.closePath();
+    ctx.fillStyle = '#080c14';
+    ctx.fill();
+
+    // Rising light at horizon center
+    const riseGrad = ctx.createLinearGradient(0, H * 0.72, 0, H * 0.55);
+    riseGrad.addColorStop(0, `rgba(230,180,80,${0.55 + Math.sin(t * 0.018) * 0.1})`);
+    riseGrad.addColorStop(1, 'rgba(230,180,80,0)');
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = riseGrad;
+    ctx.beginPath();
+    ctx.ellipse(W / 2, H * 0.78, W * 0.3, H * 0.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Stars near top
+    if (!canvas._stars) {
+      canvas._stars = Array.from({ length: 40 }, () => ({
+        x: Math.random() * W, y: Math.random() * H * 0.5,
+        r: Math.random() * 1.2 + 0.2, phase: Math.random() * Math.PI * 2
+      }));
+    }
+    canvas._stars.forEach(s => {
+      const fade = 1 - (s.y / (H * 0.5));
+      const a = fade * (0.4 + Math.sin(t * 0.025 + s.phase) * 0.15);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,215,240,${Math.max(0, a)})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+})();
+
+/* ── SCROLL REVEAL ── */
+(function() {
+  const targets = document.querySelectorAll(
+    '.section-label, .scripture, .body-text, .prophecy-grid, .judah-block, .key-verse, .chain'
+  );
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  targets.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
