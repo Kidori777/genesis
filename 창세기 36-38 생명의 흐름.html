@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창세기 36–38장 | 생명은 어디로 흐르는가</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Cormorant+Garamond:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #f0f3f7;
+    --bg2:        #e8edf4;
+    --bg3:        #dce4ee;
+    --ink:        #1a2230;
+    --ink-mid:    #3a4a60;
+    --ink-light:  #6a7f9a;
+    --ink-faint:  #a8b8cc;
+    --blue:       #2c4a72;
+    --blue-mid:   #4a6d9a;
+    --blue-lt:    #7fa0c4;
+    --accent:     #1e3a5f;
+    --rule:       rgba(44,74,114,0.18);
+    --quote-bg:   rgba(44,74,114,0.06);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 400;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ─── HORIZON CANVAS (fixed background) ─── */
+  #horizon-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ─── SCROLL LINE ─── */
+  #scroll-line {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #scroll-line .fill {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, var(--blue), var(--blue-lt));
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 0.08s linear;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 64px 80px 80px;
+    overflow: hidden;
+  }
+  .hero-inner {
+    max-width: 700px;
+  }
+  .hero-series {
+    font-size: 0.72rem;
+    letter-spacing: 0.38em;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    font-weight: 400;
+    font-family: 'Noto Serif KR', serif;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--ink-mid);
+    line-height: 2;
+    font-weight: 300;
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hero-tags span {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--blue-mid);
+    border: 1px solid var(--blue-lt);
+    padding: 5px 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    background: rgba(255,255,255,0.6);
+  }
+  .scroll-cue {
+    position: absolute;
+    bottom: 32px;
+    right: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-faint);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+  .scroll-cue::after {
+    content: '';
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--ink-faint), transparent);
+    animation: pullDown 2s ease-in-out infinite;
+  }
+  @keyframes pullDown {
+    0%,100% { transform: scaleY(1); opacity: 0.5; }
+    50%      { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  /* ─── MAIN WRAPPER ─── */
+  .main {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ─── CHAPTER BLOCK ─── */
+  .chapter {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 96px 48px;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .chapter.visible { opacity: 1; transform: translateY(0); }
+
+  .ch-header {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ch-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.5rem;
+    font-weight: 300;
+    color: var(--blue-lt);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .ch-meta { }
+  .ch-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .ch-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.3;
+  }
+
+  /* ─── BODY TEXT ─── */
+  .body {
+    font-size: 1rem;
+    color: var(--ink-mid);
+    line-height: 2.05;
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+  .body strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ─── SCRIPTURE ─── */
+  .verse {
+    position: relative;
+    margin: 40px 0;
+    padding: 24px 28px 24px 36px;
+    background: var(--quote-bg);
+    border-left: 2px solid var(--blue-mid);
+  }
+  .verse p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--blue);
+    line-height: 1.8;
+  }
+  .verse cite {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    font-style: normal;
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  /* ─── CONTRAST PANEL ─── */
+  .contrast {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 48px 0;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .c-side {
+    padding: 32px 28px;
+  }
+  .c-side + .c-side {
+    border-left: 1px solid var(--rule);
+    background: rgba(44,74,114,0.03);
+  }
+  .c-label {
+    font-size: 0.67rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .c-side.joseph .c-label { color: var(--blue-mid); }
+  .c-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .c-side.joseph .c-name { color: var(--accent); }
+  .c-text {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.85;
+    font-weight: 300;
+  }
+  .c-side.joseph .c-text { color: var(--ink-mid); }
+
+  /* ─── SCENE CANVAS WRAPPER ─── */
+  .scene-wrap {
+    position: relative;
+    height: 180px;
+    margin: 48px 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #c8d8ea, #e8edf4);
+  }
+  .scene-wrap canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .scene-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 28px;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--blue);
+    opacity: 0.7;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ─── INSIGHT ─── */
+  .insight {
+    padding: 56px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin: 56px 0;
+    text-align: center;
+  }
+  .insight p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.85rem);
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.75;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .insight p em {
+    font-style: normal;
+    color: var(--blue);
+    border-bottom: 1px solid var(--blue-lt);
+  }
+
+  /* ─── LINEAGE ─── */
+  .lineage {
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .lineage-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .lineage-row.visible { opacity: 1; transform: translateX(0); }
+  .l-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .l-desc {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+  .l-arrow {
+    color: var(--ink-faint);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── CHAPTER DIVIDER ─── */
+  .ch-divider {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .ch-divider hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ─── CLOSING ─── */
+  .closing {
+    position: relative;
+    z-index: 1;
+    background: var(--bg2);
+    border-top: 1px solid var(--rule);
+    padding: 100px 48px 120px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .closing.visible { opacity: 1; transform: translateY(0); }
+  .closing-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .closing-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--blue-mid);
+    margin-bottom: 40px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    margin-bottom: 64px;
+  }
+  .col-item {
+    background: white;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .col-person {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .col-fact {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .col-item:nth-child(2) .col-person { color: var(--blue); }
+  .final-block {
+    background: white;
+    border: 1px solid var(--rule);
+    padding: 44px 40px;
+    text-align: center;
+  }
+  .final-block p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--ink-mid);
+    line-height: 2;
+  }
+  .final-block strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ─── SERIES FOOTER ─── */
+  .series-footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--rule);
+    padding-top: 40px;
+    text-align: center;
+  }
+  .series-footer-inner {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .series-church {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .series-name {
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .series-range {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 0 24px 60px; }
+    .chapter { padding: 64px 24px; }
+    .contrast { grid-template-columns: 1fr; }
+    .c-side + .c-side { border-left: none; border-top: 1px solid var(--rule); }
+    .three-col { grid-template-columns: 1fr; }
+    .scroll-cue { right: 24px; }
+    .ch-divider { padding: 0 24px; }
+    .closing { padding: 60px 24px 80px; }
+    .final-block { padding: 32px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chapter, .closing, .lineage-row { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Horizon background -->
+<canvas id="horizon-canvas"></canvas>
+
+<!-- Scroll line -->
+<div id="scroll-line"><div class="fill" id="scroll-fill"></div></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-series">부산교회 성경 인물 시리즈 · 창세기</div>
+    <h1 class="hero-title">생명은<br>어디로<br>흐르는가</h1>
+    <p class="hero-desc">에서의 번성, 요셉의 구덩이, 유다의 실패 —<br>하나님의 경륜은 예상치 못한 길로 흐릅니다.</p>
+    <div class="hero-tags">
+      <span>창세기 36장</span>
+      <span>창세기 37장</span>
+      <span>창세기 38장</span>
+    </div>
+  </div>
+  <div class="scroll-cue">아래로</div>
+</section>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- 창세기 36 -->
+  <article class="chapter" id="ch36">
+    <div class="ch-header">
+      <div class="ch-num">36</div>
+      <div class="ch-meta">
+        <div class="ch-tag">창세기 · Genesis</div>
+        <h2 class="ch-title">에서의 계보<br>— 번성하지만 공허한</h2>
+      </div>
+    </div>
+
+    <div class="verse">
+      <p>에서는(즉, 에돔)의 계보는 이러하다.</p>
+      <cite>창세기 36:1</cite>
+    </div>
+
+    <p class="body">
+      이 한 구절은 단순한 족보의 시작처럼 보이지만, 사실은 하나님께서 <strong>사람을 통해 무엇을 이루시고, 무엇을 이루지 않으시는지</strong>를 드러내는 조용한 선언입니다. 에서는 아브라함의 혈통 안에 있었고, 이삭의 아들이었으며, 야곱의 형이었습니다. 그는 분명 약속의 선 가까이에 있던 사람이었습니다.
+    </p>
+
+    <div class="verse">
+      <p>에서는 세일산에 거주하였다. 에서는 곧 에돔이다.</p>
+      <cite>창세기 36:8</cite>
+    </div>
+
+    <p class="body">
+      그는 약속의 땅을 떠났습니다. 이유는 단순합니다 — <strong>그들의 재산이 너무 많았기 때문입니다.</strong> 소유를 선택하고, 현실을 선택하고, 자신의 자리를 선택한 결과였습니다.
+    </p>
+
+    <div class="verse">
+      <p>이스라엘 자손을 다스리는 왕이 있기 전에 에돔 땅을 다스리던 왕들이 있었다.</p>
+      <cite>창세기 36:31</cite>
+    </div>
+
+    <p class="body">
+      하나님의 약속의 백성은 아직 왕도 없고 형성도 되지 않았는데, 에서의 후손은 이미 왕국 체계를 갖추고 있었습니다. 그러나 이 번성은 하나님의 경륜을 의미하지 않습니다.
+    </p>
+
+    <div class="insight">
+      <p>36장은 이름은 많지만 <em>하나님의 이야기</em>는 없습니다.<br>확장은 있지만 <em>내적인 변화</em>는 없습니다.</p>
+    </div>
+  </article>
+
+  <div class="ch-divider"><hr></div>
+
+  <!-- 창세기 37 -->
+  <article class="chapter" id="ch37">
+    <div class="ch-header">
+      <div class="ch-num">37</div>
+      <div class="ch-meta">
+        <div class="ch-tag">창세기 · Genesis</div>
+        <h2 class="ch-title">요셉, 구덩이로<br>— 생명이 죽음의 길로</h2>
+      </div>
+    </div>
+
+    <div class="verse">
+      <p>야곱은 자기 아버지가 체류하던 가나안 땅에 거주하였다. 야곱의 계보는 이러하다.</p>
+      <cite>창세기 37:1–2</cite>
+    </div>
+
+    <p class="body">
+      많은 이름에서, 다시 <strong>한 생명으로.</strong> 넓은 확장에서, 깊은 다룸으로. 하나님은 다시 한 사람의 이야기로 돌아오십니다. 그 중심에 한 소년이 등장합니다.
+    </p>
+
+    <div class="contrast">
+      <div class="c-side esau">
+        <div class="c-label">에서 — 36장</div>
+        <div class="c-name">번성</div>
+        <div class="c-text">족장들, 부족들, 왕국.<br>이름은 많지만<br>하나님의 이야기는 없다.</div>
+      </div>
+      <div class="c-side joseph">
+        <div class="c-label">요셉 — 37장</div>
+        <div class="c-name">다룸</div>
+        <div class="c-text">어리고, 미성숙하고,<br>형들에게 미움 받는 소년.<br>그러나 생명의 중심에 있다.</div>
+      </div>
+    </div>
+
+    <div class="verse">
+      <p>나의 곡식 단이 일어나 서고… 형들의 곡식 단들이 절을 하였다.</p>
+      <cite>창세기 37:7</cite>
+    </div>
+
+    <div class="verse">
+      <p>해와 달과 열한 별들이 나에게 절하였다.</p>
+      <cite>창세기 37:9</cite>
+    </div>
+
+    <p class="body">
+      이 꿈은 단순한 미래 예측이 아닙니다. 하나님이 보시는 시선, 곧 <strong>생명의 관점</strong>입니다. 그러나 이 계시는 형들에게 이해되지 않았습니다. 생명은 이해의 대상이 아니라, 체험과 다룸을 통해서만 알게 되는 것이기 때문입니다.
+    </p>
+
+    <!-- dawn/pit scene -->
+    <div class="scene-wrap">
+      <canvas id="pit-canvas"></canvas>
+      <div class="scene-caption">구덩이 — 변화의 시작</div>
+    </div>
+
+    <div class="verse">
+      <p>자, 저 녀석을 죽이자… 그의 꿈이 어떻게 되는지 보자.</p>
+      <cite>창세기 37:20</cite>
+    </div>
+
+    <div class="verse">
+      <p>그들은 요셉을 이스마엘 사람들에게 은 이십 닢에 팔았다.</p>
+      <cite>창세기 37:28</cite>
+    </div>
+
+    <p class="body">
+      이 장면은 단순한 배신이 아니라, 하나님의 경륜 안에서 <strong>생명이 죽음의 길로 들어가는 순간</strong>입니다. 그러나 이 죽음은 끝이 아닙니다. 이것은 변화의 시작입니다.
+    </p>
+
+    <div class="insight">
+      <p>하나님은 사람을 단순히 축복하는 것이 아니라,<br>그 사람 안에서 <em>자신의 형상을 이루십니다.</em></p>
+    </div>
+  </article>
+
+  <div class="ch-divider"><hr></div>
+
+  <!-- 창세기 38 -->
+  <article class="chapter" id="ch38">
+    <div class="ch-header">
+      <div class="ch-num">38</div>
+      <div class="ch-meta">
+        <div class="ch-tag">창세기 · Genesis</div>
+        <h2 class="ch-title">유다와 다말<br>— 실패 속에 열리는 길</h2>
+      </div>
+    </div>
+
+    <div class="verse">
+      <p>유다는 형제들에게서 떨어져 나가…</p>
+      <cite>창세기 38:1</cite>
+    </div>
+
+    <p class="body">
+      이 한 구절은 매우 중요합니다. 그는 공동체에서 떨어져 나갑니다. 단순한 이동이 아니라, <strong>생명의 흐름에서 벗어나는 선택</strong>입니다. 유다는 점점 육체의 길로 들어갑니다 — 욕망, 계산, 그리고 책임 회피.
+    </p>
+
+    <p class="body">
+      그러나 놀랍게도, 하나님은 이 어두운 이야기 속에서도 자신의 경륜을 멈추지 않으십니다. <strong>다말</strong>이 등장합니다. 상처 입고, 버려지고, 외면당한 한 여인. 그러나 그녀는 단순히 피해자가 아니라, <strong>하나님의 약속을 붙드는 사람</strong>으로 나타납니다.
+    </p>
+
+    <div class="verse">
+      <p>그 애가 나보다 더 옳구나.</p>
+      <cite>창세기 38:26</cite>
+    </div>
+
+    <p class="body">
+      유다의 이 고백은 단순한 인정이 아닙니다. 그의 존재가 <strong>깨어지는 순간</strong>입니다. 그리고 다말을 통해 베레스와 세라, 두 아들이 태어납니다.
+    </p>
+
+    <div class="lineage" id="lineage">
+      <div class="lineage-row"><span class="l-name">유다</span><span class="l-desc">실패하고 깨어진 사람</span></div>
+      <div class="lineage-row"><span class="l-name">다말</span><span class="l-desc">약속을 붙든 여인</span></div>
+      <div class="lineage-row"><span class="l-name">베레스</span><span class="l-desc">다윗의 조상</span></div>
+      <div class="lineage-row"><span class="l-name">다윗</span><span class="l-desc">이스라엘의 왕</span></div>
+      <div class="lineage-row"><span class="l-name">예수 그리스도</span><span class="l-desc">하나님의 아들, 메시아</span></div>
+    </div>
+
+    <div class="insight">
+      <p>하나님의 경륜은 완벽한 사람을 통해 이루어지는 것이 아니라,<br><em>깨지고, 실패하고, 드러난 사람</em>을 통해 이어집니다.</p>
+    </div>
+  </article>
+
+</div><!-- end .main -->
+
+<!-- ═══ CLOSING ═══ -->
+<section class="closing" id="closing">
+  <div class="closing-inner">
+    <div class="closing-label">세 사람, 하나의 흐름</div>
+    <div class="three-col">
+      <div class="col-item">
+        <div class="col-person">에서</div>
+        <div class="col-fact">번성했지만<br>생명의 흐름 밖에 있었다</div>
+      </div>
+      <div class="col-item">
+        <div class="col-person">요셉</div>
+        <div class="col-fact">버려졌지만<br>생명의 중심에 있었다</div>
+      </div>
+      <div class="col-item">
+        <div class="col-person">유다</div>
+        <div class="col-fact">실패했지만<br>그 속에서 길이 열렸다</div>
+      </div>
+    </div>
+    <div class="final-block">
+      <p>
+        겉의 번성이 아니라, <strong>속의 생명.</strong><br>
+        자기의 길이 아니라, <strong>하나님의 손에 붙잡히는 길.</strong><br><br>
+        하나님께서 사람 안에 자신의 생명을 심으시고,<br>
+        그 생명을 통해 자신의 형상을 이루시며,<br>
+        자신과 연합된 사람을 얻으시는 것 —<br><br>
+        그것이 하나님이 이 긴 이야기 속에서<br>
+        이루고 계신 <strong>궁극적인 경륜</strong>입니다.
+      </p>
+    </div>
+  </div>
+  <div class="series-footer">
+    <div class="series-footer-inner">
+      <div class="series-church">부산교회</div>
+      <div class="series-name">성경 인물 시리즈 · 창세기</div>
+      <div class="series-range">창세기 36장 — 38장</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── HORIZON CANVAS ───
+(function() {
+  const canvas = document.getElementById('horizon-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // stars (faint, dawn-blue)
+  const stars = Array.from({length: 120}, () => ({
+    x: Math.random(),
+    y: Math.random() * 0.65,
+    r: Math.random() * 0.9 + 0.2,
+    a: Math.random() * 0.5 + 0.2,
+    speed: Math.random() * 0.3 + 0.1
+  }));
+
+  let t = 0;
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // dawn sky gradient
+    const sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0,   '#b8cfe0');
+    sky.addColorStop(0.4, '#ccdde8');
+    sky.addColorStop(0.7, '#dde8f0');
+    sky.addColorStop(1,   '#e8eef4');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, w, h);
+
+    // horizon glow
+    const horizonY = h * 0.68;
+    const hglow = ctx.createRadialGradient(w * 0.5, horizonY, 0, w * 0.5, horizonY, w * 0.55);
+    hglow.addColorStop(0,   'rgba(200,218,238,0.5)');
+    hglow.addColorStop(0.5, 'rgba(180,205,228,0.2)');
+    hglow.addColorStop(1,   'transparent');
+    ctx.fillStyle = hglow;
+    ctx.fillRect(0, 0, w, h);
+
+    // stars (fade near horizon)
+    t += 0.005;
+    stars.forEach(s => {
+      const fadeY = Math.max(0, 1 - s.y / 0.55);
+      const pulse = s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.x * 8));
+      ctx.beginPath();
+      ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(100,140,190,${pulse * fadeY * 0.7})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── PIT / DAWN SCENE ───
+(function() {
+  const canvas = document.getElementById('pit-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+
+  // single bright star above pit
+  let t = 0;
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    t += 0.012;
+
+    // sky
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#8aaec8');
+    g.addColorStop(0.6, '#b8cfe0');
+    g.addColorStop(1, '#d0dfe8');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+
+    // distant land silhouette
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.75);
+    for (let x = 0; x <= w; x += 30) {
+      ctx.lineTo(x, h * 0.75 + Math.sin(x * 0.018) * 12 + Math.sin(x * 0.04) * 5);
+    }
+    ctx.lineTo(w, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fillStyle = '#6a8aaa';
+    ctx.fill();
+
+    // foreground dark earth
+    ctx.fillStyle = '#3a5070';
+    ctx.fillRect(0, h * 0.85, w, h * 0.15);
+
+    // star (one bright star — Joseph's dream)
+    const sx = w * 0.5, sy = h * 0.2;
+    const glow = 0.7 + 0.3 * Math.sin(t);
+    const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 28);
+    sg.addColorStop(0, `rgba(220,235,255,${glow})`);
+    sg.addColorStop(1, 'rgba(140,180,220,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(sx - 28, sy - 28, 56, 56);
+    ctx.beginPath();
+    ctx.arc(sx, sy, 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${glow})`;
+    ctx.fill();
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── SCROLL PROGRESS ───
+(function() {
+  const fill = document.getElementById('scroll-fill');
+  function update() {
+    const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    fill.style.height = (Math.min(p, 1) * 100) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// ─── SCROLL REVEAL ───
+(function() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('.chapter, .closing').forEach(el => io.observe(el));
+
+  // lineage rows staggered
+  const lrows = document.querySelectorAll('.lineage-row');
+  const lobs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const rows = e.target.querySelectorAll('.lineage-row');
+        rows.forEach((r, i) => {
+          setTimeout(() => r.classList.add('visible'), i * 120);
+        });
+        lobs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  const lin = document.getElementById('lineage');
+  if (lin) lobs.observe(lin);
+})();
+</script>
+</body>
+</html>
