@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하나님의 경륜 | 창세기 42–47장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --night:   #080e1a;
+  --deep:    #0d1525;
+  --navy:    #111d30;
+  --gold:    #c8a050;
+  --gold-lt: #e8c878;
+  --dawn:    #c4624a;
+  --linen:   #f2ead8;
+  --mist:    rgba(242,234,216,0.72);
+  --muted:   rgba(242,234,216,0.44);
+  --border:  rgba(200,160,80,0.18);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--night);
+  color: var(--linen);
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 300;
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* ── STAR CANVAS ── */
+#stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NILE LINES (decorative SVG bg) ── */
+.nile-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 60vh;
+  background: radial-gradient(ellipse at 50% 0%,
+    rgba(200,160,80,0.16) 0%,
+    rgba(196,98,74,0.08) 40%,
+    transparent 70%);
+  pointer-events: none;
+}
+
+.series-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+.hero-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  opacity: 0.65;
+  margin-bottom: 1.2rem;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--linen);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 300;
+  color: var(--mist);
+  margin-top: 1.2rem;
+  margin-bottom: 3rem;
+  letter-spacing: 0.04em;
+}
+
+.hero-divider {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 0 auto 3rem;
+}
+
+.hero-ref {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+/* ── FLOW MAP ── */
+.flow-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 2rem 2rem;
+  max-width: 900px;
+  margin: 0 auto 1rem;
+}
+
+.flow-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.flow-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  opacity: 0.6;
+  padding: 0.3rem 0.6rem;
+  border: 0.5px solid rgba(200,160,80,0.2);
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: opacity 0.3s, border-color 0.3s;
+}
+
+.flow-arrow {
+  color: var(--gold);
+  opacity: 0.3;
+  font-size: 0.75rem;
+  padding: 0 2px;
+}
+
+/* ── MAIN CONTENT ── */
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 2rem 8rem;
+}
+
+/* ── SECTION ── */
+.section {
+  position: relative;
+  margin-bottom: 6rem;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Gold light beam entering from top */
+.section::before {
+  content: '';
+  position: absolute;
+  top: -2rem;
+  left: -1.5rem;
+  width: 1px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  transition: height 1s ease 0.1s;
+}
+
+.section.visible::before {
+  height: 100px;
+}
+
+/* ── SCRIPTURE BLOCK ── */
+.scripture {
+  position: relative;
+  margin: 0 0 2.4rem;
+  padding: 2rem 2.2rem 2rem 2.8rem;
+  border-left: 1.5px solid var(--gold);
+  background: linear-gradient(135deg,
+    rgba(200,160,80,0.06) 0%,
+    transparent 60%);
+}
+
+.scripture::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border-right: 0.5px solid rgba(200,160,80,0.08);
+  border-bottom: 0.5px solid rgba(200,160,80,0.06);
+  pointer-events: none;
+}
+
+.scripture p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.12rem, 2.2vw, 1.32rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--linen);
+  margin-bottom: 0.8rem;
+}
+
+.scripture-ref {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  opacity: 0.7;
+}
+
+/* ── BODY TEXT ── */
+.body-text {
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 2;
+  color: var(--mist);
+  margin-bottom: 1.4rem;
+}
+
+.body-text strong {
+  color: var(--linen);
+  font-weight: 500;
+}
+
+/* ── ACCENT PHRASE ── */
+.accent-line {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  color: var(--gold-lt);
+  line-height: 1.7;
+  margin: 1.6rem 0;
+  padding-left: 1.2rem;
+  border-left: 0.5px solid rgba(200,160,80,0.35);
+}
+
+/* ── THEOLOGICAL KEY ── */
+.key-card {
+  position: relative;
+  margin: 2.4rem 0;
+  padding: 1.8rem 2rem;
+  background: rgba(13,21,37,0.6);
+  border: 0.5px solid var(--border);
+  border-top: 1px solid rgba(200,160,80,0.35);
+  overflow: hidden;
+}
+
+.key-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--gold) 30%,
+    var(--gold) 70%,
+    transparent 100%);
+  opacity: 0.5;
+}
+
+.key-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+}
+
+.key-text {
+  font-size: 0.98rem;
+  line-height: 1.95;
+  color: var(--mist);
+}
+
+/* ── SECTION NUMBER ── */
+.sec-num {
+  position: absolute;
+  top: 0.2rem;
+  right: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem;
+  font-weight: 300;
+  color: rgba(200,160,80,0.06);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── CHAPTER LABEL ── */
+.chapter-tag {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  opacity: 0.55;
+  border: 0.5px solid rgba(200,160,80,0.25);
+  padding: 0.2rem 0.7rem;
+  margin-bottom: 1.4rem;
+  border-radius: 1px;
+}
+
+/* ── CLIMAX PANEL ── */
+.climax {
+  position: relative;
+  margin: 5rem 0;
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  background: linear-gradient(135deg,
+    rgba(196,98,74,0.08) 0%,
+    rgba(200,160,80,0.06) 50%,
+    transparent 100%);
+  border: 0.5px solid rgba(200,160,80,0.2);
+  overflow: hidden;
+}
+
+.climax::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%,
+    rgba(200,160,80,0.12) 0%,
+    transparent 70%);
+  pointer-events: none;
+}
+
+.climax-ko {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 300;
+  color: var(--linen);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.climax-ko em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.climax-ref {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--gold);
+  opacity: 0.6;
+  letter-spacing: 0.12em;
+  position: relative;
+}
+
+/* ── ECONOMY FLOW ── */
+.economy {
+  margin: 4rem 0;
+  position: relative;
+}
+
+.economy-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.55;
+  text-align: center;
+  margin-bottom: 2.4rem;
+}
+
+.econ-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.econ-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.6rem;
+  padding: 1.2rem 0;
+  border-bottom: 0.5px solid rgba(200,160,80,0.08);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.econ-step.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.econ-icon {
+  flex-shrink: 0;
+  width: 2px;
+  height: 100%;
+  min-height: 3rem;
+  background: linear-gradient(to bottom, var(--gold), rgba(200,160,80,0.2));
+  margin-top: 0.3rem;
+}
+
+.econ-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--gold);
+  min-width: 90px;
+  padding-top: 0.05rem;
+}
+
+.econ-desc {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+/* ── CLOSING ── */
+.closing {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.closing-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--mist);
+  margin-bottom: 3rem;
+}
+
+.closing-text strong {
+  color: var(--gold-lt);
+  font-weight: 400;
+}
+
+.closing-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.closing-divider span {
+  display: block;
+  width: 60px;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, var(--gold));
+}
+
+.closing-divider span:last-child {
+  background: linear-gradient(to left, transparent, var(--gold));
+}
+
+.closing-diamond {
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  opacity: 0.6;
+}
+
+/* ── FOOTER ── */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem 2rem 3rem;
+  border-top: 0.5px solid rgba(200,160,80,0.12);
+}
+
+.footer-church {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 0.4rem;
+}
+
+.footer-series {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+/* ── DAWN HORIZON ── */
+.dawn-bar {
+  position: relative;
+  z-index: 1;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--dawn) 20%,
+    var(--gold) 50%,
+    var(--dawn) 80%,
+    transparent 100%);
+  opacity: 0.35;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+@media (max-width: 600px) {
+  .scripture { padding: 1.4rem 1.4rem 1.4rem 1.8rem; }
+  .content { padding: 0 1.2rem 6rem; }
+  .flow-bar { gap: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Star canvas -->
+<canvas id="stars"></canvas>
+
+<!-- Nile decorative SVG -->
+<svg class="nile-bg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <path d="M-100 400 Q200 350 500 420 Q800 490 1100 380 Q1300 320 1400 400" fill="none" stroke="#c8a050" stroke-width="0.8"/>
+  <path d="M-100 450 Q250 400 550 470 Q850 540 1150 430 Q1350 370 1400 450" fill="none" stroke="#c8a050" stroke-width="0.5"/>
+  <path d="M-100 350 Q150 300 450 370 Q750 440 1050 330" fill="none" stroke="#c8a050" stroke-width="0.4"/>
+</svg>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <p class="series-label">부산교회 · 창세기 시리즈</p>
+  <p class="hero-eyebrow">창세기 42–47장</p>
+  <h1 class="hero-title">하나님의<br><em>경륜</em></h1>
+  <p class="hero-subtitle">보이지 않는 손이 역사를 이끄신다</p>
+  <div class="hero-divider"></div>
+  <p class="hero-ref">기근 · 내려감 · 시험 · 회개 · 대신함 · 계시 · 연합 · 축복</p>
+</header>
+
+<!-- Flow map -->
+<nav class="flow-bar" aria-label="본문 흐름">
+  <div class="flow-item"><span class="flow-word">기근</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">내려감</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">시험</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">회개</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">대신함</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">계시</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">연합</span><span class="flow-arrow">›</span></div>
+  <div class="flow-item"><span class="flow-word">축복</span></div>
+</nav>
+
+<div class="dawn-bar"></div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main class="content">
+
+  <!-- § 1 -->
+  <section class="section" aria-label="기근과 내려감">
+    <span class="sec-num" aria-hidden="true">01</span>
+    <span class="chapter-tag">창 42:1–2</span>
+    <div class="scripture">
+      <p>"야곱은 이집트에 곡식이 있다는 것을 알게 되었다… '그곳으로 내려가서 우리를 위해 곡식을 사 오너라. 그래야 우리가 죽지 않고 살아남지 않겠느냐.'"</p>
+      <span class="scripture-ref">창세기 42:1–2</span>
+    </div>
+    <p class="body-text">이 한 문장은 단순히 기근 속에서 살아남기 위한 한 가족의 선택처럼 보입니다. 그러나 그 깊은 곳에는, 보이지 않게 흐르고 있는 <strong>하나님의 경륜</strong>이 있습니다.</p>
+    <span class="accent-line">기근은 우연이 아니라, 하나님께서 사람을 움직이시는 방식입니다.</span>
+    <p class="body-text">사람이 스스로는 가지 않으려는 길, 하나님께서는 결핍을 통해 그 길로 이끄십니다. 생명이 끊어질 것 같은 상황 속에서, 오히려 생명으로 들어가는 길이 열립니다.</p>
+    <div class="key-card">
+      <p class="key-label">경륜의 원리</p>
+      <p class="key-text">야곱의 아들들이 이집트로 내려가는 장면은 단순한 이동이 아니라, 하나님께서 한 가족을 <strong style="color:var(--linen)">"생존"</strong>에서 <strong style="color:var(--gold-lt)">"구원"</strong>으로 이끄시는 첫 걸음입니다.</p>
+    </div>
+  </section>
+
+  <!-- § 2 -->
+  <section class="section" aria-label="꿈의 성취">
+    <span class="sec-num" aria-hidden="true">02</span>
+    <span class="chapter-tag">창 42:6</span>
+    <div class="scripture">
+      <p>"요셉의 형들이 와서 얼굴을 땅에 대고 그에게 절을 하였다."</p>
+      <span class="scripture-ref">창세기 42:6</span>
+    </div>
+    <p class="body-text">이 장면은 오래 전 한 소년이 꾸었던 꿈의 성취입니다. 그러나 그 꿈은 단지 개인의 높아짐을 위한 것이 아니었습니다. 하나님께서는 한 사람을 높이심으로, 많은 사람을 살리시기 위한 길을 준비하고 계셨습니다.</p>
+    <span class="accent-line">요셉은 형들을 알아보았으나, 형들은 요셉을 알아보지 못합니다.</span>
+    <p class="body-text">이것이 하나님의 방식입니다. 하나님께서 행하시는 일은 이미 우리 앞에 와 있지만, 사람은 그것을 알아보지 못합니다. 그래서 하나님은 즉시 드러내지 않으시고, 시간을 두고 드러내십니다.</p>
+    <div class="key-card">
+      <p class="key-label">하나님의 때</p>
+      <p class="key-text">단순한 만남이 아니라, <strong style="color:var(--gold-lt)">"변화된 사람과의 만남"</strong>을 원하시기 때문입니다.</p>
+    </div>
+  </section>
+
+  <!-- § 3 -->
+  <section class="section" aria-label="양심이 깨어남">
+    <span class="sec-num" aria-hidden="true">03</span>
+    <span class="chapter-tag">창 42:21</span>
+    <div class="scripture">
+      <p>"우리가 정말로 동생에게 죄를 지었어…"</p>
+      <span class="scripture-ref">창세기 42:21</span>
+    </div>
+    <p class="body-text">형제들의 마음 속에 감추어져 있던 죄가 드러납니다. 하나님은 단지 사람을 구원하시기 전에, 먼저 사람을 빛 가운데 두십니다.</p>
+    <span class="accent-line">기근은 몸을 굶주리게 하지만, 하나님의 손은 양심을 깨웁니다.</span>
+    <div class="key-card">
+      <p class="key-label">구원의 순서</p>
+      <p class="key-text">이것이 하나님의 경륜의 중요한 단계입니다. 사람은 생명을 얻기 전에, 먼저 <strong style="color:var(--gold-lt)">자신이 죽어 있다는 것을 알아야</strong> 합니다.</p>
+    </div>
+  </section>
+
+  <!-- § 4 -->
+  <section class="section" aria-label="유다의 담보">
+    <span class="sec-num" aria-hidden="true">04</span>
+    <span class="chapter-tag">창 43:9</span>
+    <div class="scripture">
+      <p>"제가 그 아이의 담보가 되겠습니다."</p>
+      <span class="scripture-ref">창세기 43:9</span>
+    </div>
+    <p class="body-text">유다의 이 고백은 놀라운 전환입니다. 이전에는 동생을 팔아넘겼던 형제였지만, 이제는 자신을 대신 내어놓는 사람이 됩니다.</p>
+    <span class="accent-line">하나님은 단순히 한 가족을 회복시키시는 것이 아니라, "대신함"이라는 더 깊은 원리를 계시하십니다.</span>
+    <div class="key-card">
+      <p class="key-label">대속의 그림자</p>
+      <p class="key-text">이 흐름은 결국 훗날 한 사람, 곧 <strong style="color:var(--gold-lt)">온 인류를 위해 자신을 내어주실 분</strong>을 향해 나아갑니다. 하나님은 역사를 통해 그 그림을 조금씩 그려가고 계십니다.</p>
+    </div>
+  </section>
+
+  <!-- § 5 — CLIMAX -->
+  <section class="section" aria-label="요셉의 계시">
+    <span class="sec-num" aria-hidden="true">05</span>
+    <span class="chapter-tag">창 45:5</span>
+    <div class="climax">
+      <p class="climax-ko">"하나님께서 우리 생명을 보존하시려고<br>나를 형님들보다 먼저 여기로<br><em>보내셨기 때문입니다.</em>"</p>
+      <p class="climax-ref">창세기 45:5</p>
+    </div>
+    <p class="body-text">드디어 요셉이 자신을 드러냅니다. 그러나 그가 하는 말은 놀랍습니다.</p>
+    <span class="accent-line">"형님들이 아니라 하나님이십니다."</span>
+    <p class="body-text">사람의 악한 선택조차도, 하나님의 경륜 안에서는 생명을 이루는 재료가 됩니다. 이것이 하나님이 일하시는 방식입니다.</p>
+    <div class="key-card">
+      <p class="key-label">요셉의 선언</p>
+      <p class="key-text"><strong style="color:var(--dawn)">사람은 해하려 했지만,</strong> <strong style="color:var(--gold-lt)">하나님은 살리셨습니다.</strong></p>
+    </div>
+  </section>
+
+  <!-- § 6 -->
+  <section class="section" aria-label="야곱의 이집트 이주">
+    <span class="sec-num" aria-hidden="true">06</span>
+    <span class="chapter-tag">창 46:3–4</span>
+    <div class="scripture">
+      <p>"하나님께서 너를 큰 민족이 되게 하겠다… 내가 반드시 너를 다시 올라오게 하겠다."</p>
+      <span class="scripture-ref">창세기 46:3–4</span>
+    </div>
+    <p class="body-text">야곱이 이집트로 내려가기 전, 하나님께서 직접 말씀하십니다. 이 이동은 단순한 이주가 아니라, 하나님의 약속 안에서 이루어지는 과정입니다.</p>
+    <span class="accent-line">이집트로 내려감은 실패가 아니라, 하나님의 더 큰 계획 속으로 들어가는 길입니다.</span>
+  </section>
+
+  <!-- § 7 -->
+  <section class="section" aria-label="야곱과 요셉의 재회">
+    <span class="sec-num" aria-hidden="true">07</span>
+    <span class="chapter-tag">창 46:29</span>
+    <div class="scripture">
+      <p>"요셉은 아버지의 목을 끌어안은 채 한참을 울었다."</p>
+      <span class="scripture-ref">창세기 46:29</span>
+    </div>
+    <p class="body-text">이 장면은 단순한 가족의 재회가 아닙니다. 잃어버린 것이 다시 연결되는 순간입니다. 사람이 잃어버렸던 관계, 끊어졌던 생명의 흐름, 흩어졌던 가족이 다시 하나로 묶입니다.</p>
+    <div class="key-card">
+      <p class="key-label">하나님의 목적</p>
+      <p class="key-text"><strong style="color:var(--gold-lt)">분열된 것을 다시 하나로 만드는 것.</strong> 이것이 하나님께서 역사를 통해 이루시는 일입니다.</p>
+    </div>
+  </section>
+
+  <!-- § 8 -->
+  <section class="section" aria-label="야곱이 파라오를 축복">
+    <span class="sec-num" aria-hidden="true">08</span>
+    <span class="chapter-tag">창 47:7</span>
+    <div class="scripture">
+      <p>"야곱이 파라오를 축복하였다."</p>
+      <span class="scripture-ref">창세기 47:7</span>
+    </div>
+    <p class="body-text">놀랍게도, 한 나그네가 세상의 왕을 축복합니다. 이것은 겉으로 보이는 질서와는 다른, 하나님의 질서를 보여줍니다.</p>
+    <span class="accent-line">하나님께 선택된 사람은 단지 보호받는 존재가 아니라, 다른 사람을 살리고 축복하는 통로가 됩니다.</span>
+    <div class="key-card">
+      <p class="key-label">생명의 흐름</p>
+      <p class="key-text">생명을 받은 사람은, 결국 <strong style="color:var(--gold-lt)">생명을 흘려보내는 사람</strong>이 됩니다.</p>
+    </div>
+  </section>
+
+  <!-- Economy Flow -->
+  <section class="section economy" aria-label="하나님의 경륜 흐름">
+    <p class="economy-title">하나님의 경륜 — 전체 흐름</p>
+    <div class="econ-steps">
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">기근</span>
+        <span class="econ-desc">결핍을 통해 사람을 움직이시는 하나님의 방식</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">내려감</span>
+        <span class="econ-desc">생존에서 구원으로 가는 첫 걸음</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">시험</span>
+        <span class="econ-desc">변화된 사람을 기다리시는 하나님의 인내</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">회개</span>
+        <span class="econ-desc">감추어진 죄가 빛 가운데 드러남</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">대신함</span>
+        <span class="econ-desc">유다의 고백 — 대속의 원리가 계시됨</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">계시</span>
+        <span class="econ-desc">요셉의 정체 — 악도 하나님의 손 안에서 선이 됨</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">연합</span>
+        <span class="econ-desc">분열된 가족이 하나로 회복됨</span>
+      </div>
+      <div class="econ-step">
+        <div class="econ-icon"></div>
+        <span class="econ-word">축복</span>
+        <span class="econ-desc">받은 생명을 다른 이에게 흘려보냄</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ CLOSING ══ -->
+<footer>
+  <div class="closing">
+    <div class="closing-divider">
+      <span></span>
+      <div class="closing-diamond"></div>
+      <span></span>
+    </div>
+    <p class="closing-text">
+      요셉의 이야기는 단지 한 사람의 성공 이야기가 아닙니다.<br>
+      그것은 하나님께서 어떻게 사람을 다루시고,<br>
+      어떻게 죽음 같은 상황 속에서 생명을 이루시며,<br>
+      어떻게 결국 <strong>"하나 됨"으로 이끄시는지</strong>를 보여주는 계시입니다.<br><br>
+      하나님께서 사람 안에 거하시고,<br>
+      사람과 하나 되시며,<br>
+      사람을 통해 자신을 나타내시는 것.<br>
+      그것이 처음부터 지금까지 이어지는<br>
+      <strong>하나님의 궁극적인 경륜</strong>입니다.
+    </p>
+    <div class="closing-divider">
+      <span></span>
+      <div class="closing-diamond"></div>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p class="footer-church">부산교회</p>
+    <p class="footer-series">창세기 성경 시리즈 · Genesis 42–47</p>
+  </div>
+</footer>
+
+<script>
+/* ── Stars ── */
+(function(){
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    resize();
+    stars = [];
+    const n = Math.floor(W * H / 6000);
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 0.8 + 0.2,
+        a: Math.random(),
+        speed: Math.random() * 0.003 + 0.001,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.008;
+    stars.forEach(s => {
+      const alpha = s.a * (0.4 + 0.6 * Math.sin(t * s.speed * 60 + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(242,234,216,${alpha * 0.7})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', init);
+  init();
+  draw();
+})();
+
+/* ── Scroll reveal ── */
+(function(){
+  const sections = document.querySelectorAll('.section');
+  const steps = document.querySelectorAll('.econ-step');
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  sections.forEach(s => io.observe(s));
+
+  const io2 = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  steps.forEach(s => io2.observe(s));
+})();
+</script>
+</body>
+</html>
